@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -21,7 +22,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     private Context mContext;
     private DisplayThread thread;
-    private int verticalCenter, horizontalCenter, hud, tableauField;
+    private int verticalCenter, horizontalCenter, playerHUDHeight, actionHUDHeight, tableauFieldHeight;
+    private Paint topPlayerHUDPaint, bottomPlayerHUDPaint, actionHUDPaint, tableauSpacePaint;
 
     public GameView(Context context) {
         super(context);
@@ -30,14 +32,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         holder.addCallback(this);
         thread = new DisplayThread(getHolder(), this);
         setFocusable(true);
-//        positionCards();
+        positionCards();
     }
 
-//    private void positionCards() {
-//        verticalCenter = GameConstants.SCREEN_HEIGHT / 2;
-//        horizontalCenter = GameConstants.SCREEN_WIDTH / 2;
-//        hud = GameConstants.SCREEN_HEIGHT / 5;
-//        tableauField = GameConstants.SCREEN_HEIGHT * 3 / 5;
+    private void positionCards() {
+        verticalCenter = GameConstants.SCREEN_HEIGHT / 2;
+        horizontalCenter = GameConstants.SCREEN_WIDTH / 2;
+        playerHUDHeight = GameConstants.SCREEN_HEIGHT * 2 / 12;
+        tableauFieldHeight = GameConstants.SCREEN_HEIGHT * 7 / 12;
 ////        horzGap = GameConstants.CARD_WIDTH / 5;
 ////        vertGap = GameConstants.CARD_HEIGHT / 24 * 7;
 //
@@ -211,13 +213,20 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 //        comboTextPaint.setTypeface(Typeface.DEFAULT_BOLD);
 //        comboTextPosY = GameConstants.CARD_HEIGHT;
 //
-//        // Token counter.
-//        tokenTextPaint = new Paint();
-//        tokenTextPaint.setColor(mContext.getResources().getColor(R.color.app_orange));
-//        tokenTextPaint.setTextSize(48f);
-//        tokenTextPaint.setTypeface(Typeface.DEFAULT_BOLD);
-//        tokenTextPosX = col6X;
-//        tokenTextPosY = vertGap * 2;
+        // Top player HUD. bottomPlayerHUDPaint, actionHUDPaint, tableauSpacePaint
+        topPlayerHUDPaint = new Paint();
+        topPlayerHUDPaint.setColor(Color.RED);
+        topPlayerHUDPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+
+        // Bottom player HUD.
+        bottomPlayerHUDPaint = new Paint();
+        bottomPlayerHUDPaint.setColor(Color.GREEN);
+        bottomPlayerHUDPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+
+        // Action buttons.
+        actionHUDPaint = new Paint();
+        actionHUDPaint.setColor(Color.BLUE);
+        actionHUDPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 //
 //        // Combo moving text flair.
 //        comboFlairTextPaint = new Paint();
@@ -247,7 +256,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 //        }
 //
 //
-//    }
+    }
 
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
@@ -279,7 +288,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
-        canvas.drawColor(Color.YELLOW);
+        canvas.drawColor(Color.GRAY);
+        canvas.drawRect(0, 0, GameConstants.SCREEN_WIDTH, playerHUDHeight,
+                topPlayerHUDPaint);
+        canvas.drawRect(0, playerHUDHeight + tableauFieldHeight,
+                GameConstants.SCREEN_WIDTH, (playerHUDHeight * 2) + tableauFieldHeight,
+                bottomPlayerHUDPaint);
+        canvas.drawRect(0, (playerHUDHeight * 2) + tableauFieldHeight,
+                GameConstants.SCREEN_WIDTH, GameConstants.SCREEN_HEIGHT,
+                actionHUDPaint);
     }
 
     public void stopThread() {
