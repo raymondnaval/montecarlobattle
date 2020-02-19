@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -22,8 +23,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     private Context mContext;
     private DisplayThread thread;
-    private int verticalCenter, horizontalCenter, playerHUDHeight, actionHUDHeight, tableauFieldHeight;
+    private int verticalCenter, horizontalCenter, playerHUDHeight, actionHUDHeight,
+            tableauFieldHeight, cardHeightGap, cardWidthGap;
     private Paint topPlayerHUDPaint, bottomPlayerHUDPaint, actionHUDPaint, tableauSpacePaint;
+    private CardTableauPosition[] cardTableauPositions;
+    private CardDeckMonteCarlo[] cardDeckMC;
+    private Drawable cardTest;
 
     public GameView(Context context) {
         super(context);
@@ -40,6 +45,18 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         horizontalCenter = GameConstants.SCREEN_WIDTH / 2;
         playerHUDHeight = GameConstants.SCREEN_HEIGHT * 2 / 12;
         tableauFieldHeight = GameConstants.SCREEN_HEIGHT * 7 / 12;
+        cardHeightGap = (tableauFieldHeight - (GameConstants.CARD_HEIGHT * 5))/6;
+        cardWidthGap = (GameConstants.SCREEN_WIDTH - (GameConstants.CARD_WIDTH * 5))/6;
+        cardDeckMC = new CardDeckMonteCarlo[104];
+        cardDeckMC[0] = new CardDeckMonteCarlo(mContext);
+        // TODO: position cards.
+        cardDeckMC[0].setCardPosition(0, new Rect(cardWidthGap,
+                cardHeightGap +cardHeightGap  + playerHUDHeight,
+                cardWidthGap + GameConstants.CARD_WIDTH,
+                cardHeightGap  +cardHeightGap  + playerHUDHeight + GameConstants.CARD_HEIGHT));
+        cardTest = ContextCompat.getDrawable(mContext, R.drawable.six_clubs);
+
+
 ////        horzGap = GameConstants.CARD_WIDTH / 5;
 ////        vertGap = GameConstants.CARD_HEIGHT / 24 * 7;
 //
@@ -281,7 +298,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 e.printStackTrace();
             }
             retry = false;
-
         }
     }
 
@@ -297,6 +313,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         canvas.drawRect(0, (playerHUDHeight * 2) + tableauFieldHeight,
                 GameConstants.SCREEN_WIDTH, GameConstants.SCREEN_HEIGHT,
                 actionHUDPaint);
+        cardTest.setBounds(cardDeckMC[0].getCardPosition(0));
+        cardTest.draw(canvas);
+
     }
 
     public void stopThread() {
