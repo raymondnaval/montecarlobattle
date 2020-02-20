@@ -11,7 +11,7 @@ import android.view.MotionEvent;
 import android.view.WindowManager;
 
 /**
- * TODO: Divide game screen into top HUD, bottom HUD, middle tableau. Create 5x5 Tableau
+ *
  */
 
 
