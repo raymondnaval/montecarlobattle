@@ -402,7 +402,7 @@ public class CardDeck {
      *              </p>
      * @author Raymond Naval
      */
-    private class Card {
+    protected class Card {
 
         private final String TAG = "Card";
         private Rect rect;

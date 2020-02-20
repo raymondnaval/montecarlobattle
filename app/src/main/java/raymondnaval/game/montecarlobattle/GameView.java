@@ -23,12 +23,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     private Context mContext;
     private DisplayThread thread;
-    private int verticalCenter, horizontalCenter, playerHUDHeight, actionHUDHeight,
+    private int verticalCenter, horizontalCenter, actionHUDHeight,
             tableauFieldHeight, cardHeightGap, cardWidthGap;
     private Paint topPlayerHUDPaint, bottomPlayerHUDPaint, actionHUDPaint, tableauSpacePaint;
-    private CardTableauPosition[] cardTableauPositions;
+    private CardTableauLayout ctLayout;
     private CardDeckMonteCarlo[] cardDeckMC;
-    private Drawable cardTest;
+    private CardDeckMonteCarlo cards;
+    private Drawable cardTest, cardTest1, cardTest2, cardTest3, cardTest4, cardTest5, cardTest6, cardTest7, cardTest8, cardTest9, cardTest10, cardTest11;
 
     public GameView(Context context) {
         super(context);
@@ -43,23 +44,49 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private void positionCards() {
         verticalCenter = GameConstants.SCREEN_HEIGHT / 2;
         horizontalCenter = GameConstants.SCREEN_WIDTH / 2;
-        playerHUDHeight = GameConstants.SCREEN_HEIGHT * 2 / 12;
         tableauFieldHeight = GameConstants.SCREEN_HEIGHT * 7 / 12;
-        cardHeightGap = (tableauFieldHeight - (GameConstants.CARD_HEIGHT * 5))/6;
-        cardWidthGap = (GameConstants.SCREEN_WIDTH - (GameConstants.CARD_WIDTH * 5))/6;
+
+        ctLayout = new CardTableauLayout(GameConstants.PLAYER_HUD_SIZE);
+        cards = new CardDeckMonteCarlo(mContext);
+
         cardDeckMC = new CardDeckMonteCarlo[104];
         cardDeckMC[0] = new CardDeckMonteCarlo(mContext);
-        // TODO: position cards.
-        cardDeckMC[0].setCardPosition(0, new Rect(cardWidthGap,
-                cardHeightGap +cardHeightGap  + playerHUDHeight,
-                cardWidthGap + GameConstants.CARD_WIDTH,
-                cardHeightGap  +cardHeightGap  + playerHUDHeight + GameConstants.CARD_HEIGHT));
+        cardDeckMC[1] = new CardDeckMonteCarlo(mContext);
+        cardDeckMC[2] = new CardDeckMonteCarlo(mContext);
+        cardDeckMC[3] = new CardDeckMonteCarlo(mContext);
+        cardDeckMC[4] = new CardDeckMonteCarlo(mContext);
+        cardDeckMC[5] = new CardDeckMonteCarlo(mContext);
+        cardDeckMC[6] = new CardDeckMonteCarlo(mContext);
+        cardDeckMC[7] = new CardDeckMonteCarlo(mContext);
+        cardDeckMC[8] = new CardDeckMonteCarlo(mContext);
+        cardDeckMC[9] = new CardDeckMonteCarlo(mContext);
+        cardDeckMC[10] = new CardDeckMonteCarlo(mContext);
+        cardDeckMC[11] = new CardDeckMonteCarlo(mContext);
+        cardDeckMC[0].setCardPosition(0, ctLayout.getPosition(0));
+        cardDeckMC[1].setCardPosition(1, ctLayout.getPosition(1));
+        cardDeckMC[2].setCardPosition(2, ctLayout.getPosition(2));
+        cardDeckMC[3].setCardPosition(3, ctLayout.getPosition(3));
+        cardDeckMC[4].setCardPosition(4, ctLayout.getPosition(4));
+        cardDeckMC[5].setCardPosition(5, ctLayout.getPosition(5));
+        cardDeckMC[6].setCardPosition(6, ctLayout.getPosition(6));
+        cardDeckMC[7].setCardPosition(7, ctLayout.getPosition(7));
+        cardDeckMC[8].setCardPosition(8, ctLayout.getPosition(8));
+        cardDeckMC[9].setCardPosition(9, ctLayout.getPosition(9));
+        cardDeckMC[10].setCardPosition(10, ctLayout.getPosition(10));
+        cardDeckMC[11].setCardPosition(11, ctLayout.getPosition(11));
         cardTest = ContextCompat.getDrawable(mContext, R.drawable.six_clubs);
+        cardTest1 = ContextCompat.getDrawable(mContext, R.drawable.six_hearts);
+        cardTest2 = ContextCompat.getDrawable(mContext, R.drawable.six_diamonds);
+        cardTest3 = ContextCompat.getDrawable(mContext, R.drawable.six_spades);
+        cardTest4 = ContextCompat.getDrawable(mContext, R.drawable.six_bonus);
+        cardTest5 = ContextCompat.getDrawable(mContext, R.drawable.five_clubs);
+        cardTest6 = ContextCompat.getDrawable(mContext, R.drawable.four_clubs);
+        cardTest7 = ContextCompat.getDrawable(mContext, R.drawable.king_clubs);
+        cardTest8 = ContextCompat.getDrawable(mContext, R.drawable.jack_bonus);
+        cardTest9 = ContextCompat.getDrawable(mContext, R.drawable.jack_diamonds);
+        cardTest10 = ContextCompat.getDrawable(mContext, R.drawable.jack_hearts);
+        cardTest11 = ContextCompat.getDrawable(mContext, R.drawable.queen_diamonds);
 
-
-////        horzGap = GameConstants.CARD_WIDTH / 5;
-////        vertGap = GameConstants.CARD_HEIGHT / 24 * 7;
-//
 //        // X coordinates for 4- and 6-column tableau.
 //        col1X = (horizontalCenter) - (horzGap / 2) - (horzGap * 2) - (GameConstants.CARD_WIDTH * 3);
 //        col2X = (horizontalCenter) - (horzGap / 2) - (horzGap) - (GameConstants.CARD_WIDTH * 2);
@@ -305,16 +332,40 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public void draw(Canvas canvas) {
         super.draw(canvas);
         canvas.drawColor(Color.GRAY);
-        canvas.drawRect(0, 0, GameConstants.SCREEN_WIDTH, playerHUDHeight,
+        canvas.drawRect(0, 0, GameConstants.SCREEN_WIDTH, GameConstants.PLAYER_HUD_SIZE,
                 topPlayerHUDPaint);
-        canvas.drawRect(0, playerHUDHeight + tableauFieldHeight,
-                GameConstants.SCREEN_WIDTH, (playerHUDHeight * 2) + tableauFieldHeight,
+        canvas.drawRect(0, GameConstants.PLAYER_HUD_SIZE + tableauFieldHeight,
+                GameConstants.SCREEN_WIDTH, (GameConstants.PLAYER_HUD_SIZE * 2) + tableauFieldHeight,
                 bottomPlayerHUDPaint);
-        canvas.drawRect(0, (playerHUDHeight * 2) + tableauFieldHeight,
+        canvas.drawRect(0, (GameConstants.PLAYER_HUD_SIZE * 2) + tableauFieldHeight,
                 GameConstants.SCREEN_WIDTH, GameConstants.SCREEN_HEIGHT,
                 actionHUDPaint);
-        cardTest.setBounds(cardDeckMC[0].getCardPosition(0));
-        cardTest.draw(canvas);
+        cards.drawCards(canvas);
+//        cardTest.setBounds(cardDeckMC[0].getCardPosition(0));
+//        cardTest1.setBounds(cardDeckMC[1].getCardPosition(1));
+//        cardTest2.setBounds(cardDeckMC[2].getCardPosition(2));
+//        cardTest3.setBounds(cardDeckMC[3].getCardPosition(3));
+//        cardTest4.setBounds(cardDeckMC[4].getCardPosition(4));
+//        cardTest5.setBounds(cardDeckMC[5].getCardPosition(5));
+//        cardTest6.setBounds(cardDeckMC[6].getCardPosition(6));
+//        cardTest7.setBounds(cardDeckMC[7].getCardPosition(7));
+//        cardTest8.setBounds(cardDeckMC[8].getCardPosition(8));
+//        cardTest9.setBounds(cardDeckMC[9].getCardPosition(9));
+//        cardTest10.setBounds(cardDeckMC[10].getCardPosition(10));
+//        cardTest11.setBounds(cardDeckMC[11].getCardPosition(11));
+//        cardTest.draw(canvas);
+//        cardTest1.draw(canvas);
+//        cardTest2.draw(canvas);
+//        cardTest3.draw(canvas);
+//        cardTest4.draw(canvas);
+//        cardTest5.draw(canvas);
+//        cardTest6.draw(canvas);
+//        cardTest7.draw(canvas);
+//        cardTest8.draw(canvas);
+//        cardTest9.draw(canvas);
+//        cardTest10.draw(canvas);
+//        cardTest11.draw(canvas);
+
 
     }
 

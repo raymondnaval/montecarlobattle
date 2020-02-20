@@ -10,7 +10,7 @@ public class GameConstants {
     public static int SCREEN_HEIGHT;
     public static int CARD_WIDTH;
     public static int CARD_HEIGHT; // 1.5:1 ratio height to width.
-    public static final int EASY = 0;
+    public static int PLAYER_HUD_SIZE;
     public static final int MEDIUM = 1;
     public static final int HARD = 2;
     public static final int HARDER = 3;

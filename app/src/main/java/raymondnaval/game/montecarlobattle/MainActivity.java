@@ -28,8 +28,9 @@ public class MainActivity extends AppCompatActivity {
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         GameConstants.SCREEN_WIDTH = dm.widthPixels;
         GameConstants.SCREEN_HEIGHT = dm.heightPixels;
-        GameConstants.CARD_WIDTH = (GameConstants.SCREEN_WIDTH - 30) / 7;
+        GameConstants.CARD_WIDTH = GameConstants.SCREEN_WIDTH / 11;
         GameConstants.CARD_HEIGHT = GameConstants.CARD_WIDTH + (GameConstants.CARD_WIDTH / 2);
+        GameConstants.PLAYER_HUD_SIZE = GameConstants.SCREEN_HEIGHT * 2 / 12;
 
         gameView = new GameView(this);
         setContentView(gameView);
