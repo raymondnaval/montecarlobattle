@@ -30,16 +30,91 @@ public class CardTableauLayout {
         setPositions();
     }
 
-    // TODO: Check if card selected is legal move.
+    // TODO: Check if card selected is in legal position. Suggestion: track last 5 cards selected.
     public void cardSelected(int position) {
-        if(position == 0) {
-        }
+
         if (cardsSelected[position]) {
             cardsSelected[position] = false;
         } else {
-            cardsSelected[position] = true;
+
+            // Check all four sides of the selected card.
+            boolean leftSideSelected = false, rightSideSelected = false, topSideSelected = false,
+                    bottomSideSelected = false;
+
+            /* Check if card to the left is selected. */
+            // Do not check cards already on the left side.
+            if (position % 5 != 0) {
+                if (cardsSelected[position - 1]) {
+                    leftSideSelected = true;
+                }
+            }
+
+            /* Check if card to the right is selected. */
+            // Do not check cards on the right side.
+            if ((position + 1) % 5 != 0) {
+                if (cardsSelected[position + 1]) {
+                    rightSideSelected = true;
+                }
+            }
+
+            /* Check if card to the top is selected. */
+            // Do not check cards on the top side.
+            if (position > 4) {
+                if (cardsSelected[position - 5]) {
+                    topSideSelected = true;
+                }
+            }
+
+            /* Check if card to the bottom is selected. */
+            // Do not check cards on the bottom side.
+            if (position < 20) {
+                if (cardsSelected[position + 5]) {
+                    bottomSideSelected = true;
+                }
+            }
+
+            // If no cards are selected, card is selected.
+            if (numCardsSelected() == 0) {
+                cardsSelected[position] = true;
+            } else {
+
+                if (leftSideSelected && !rightSideSelected && !topSideSelected && !bottomSideSelected) {
+
+                    // Check if cards to the top and bottom right are selected. If not, set to true.
+                    if (position <= 4 && !cardsSelected[position + 6]) {
+                        cardsSelected[position] = true;
+                    } else if (position >= 20 && !cardsSelected[position - 4]) {
+                        cardsSelected[position] = true;
+                    } else {
+                        if(!cardsSelected[position + 6] && !cardsSelected[position - 4]) {
+                            cardsSelected[position] = true;
+                        }
+                    }
+
+
+                }
+                if (!leftSideSelected && rightSideSelected && !topSideSelected && !bottomSideSelected) {
+                    cardsSelected[position] = true;
+                }
+                if (!leftSideSelected && !rightSideSelected && topSideSelected && !bottomSideSelected) {
+                    cardsSelected[position] = true;
+                }
+                if (!leftSideSelected && !rightSideSelected && !topSideSelected && bottomSideSelected) {
+                    cardsSelected[position] = true;
+                }
+            }
         }
         Log.i("CardTableauLayout", "cardsSelected: " + cardsSelected[position]);
+    }
+
+    public int numCardsSelected() {
+        int numSelected = 0;
+        for (int i = 0; i < cardsSelected.length; i++) {
+            if (cardsSelected[i]) {
+                numSelected++;
+            }
+        }
+        return numSelected;
     }
 
     public void drawSelectedCards(Canvas canvas) {

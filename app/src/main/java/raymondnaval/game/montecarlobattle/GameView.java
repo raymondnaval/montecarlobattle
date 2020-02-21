@@ -288,6 +288,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     event.getY() >= ctLayout.getPosition(0).top - (ctLayout.getCardHeightGap() / 2)
                     && event.getY() <= ctLayout.getPosition(0).bottom + (ctLayout.getCardHeightGap() / 2)) {
                 ctLayout.cardSelected(0);
+
             }
             if ((event.getX() >= ctLayout.getPosition(1).left - (ctLayout.getCardWidthGap() / 2)
                     && event.getX() <= ctLayout.getPosition(1).right + (ctLayout.getCardWidthGap() / 2)) &&

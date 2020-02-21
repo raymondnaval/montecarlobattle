@@ -58,11 +58,21 @@ public class CardDeckMonteCarlo extends CardDeck {
         }
     }
 
+    // TODO: Check if card is legal move.
+    public boolean isLegalMove(int cardTouched) {
+        boolean isLegal = false;
+        switch(getCardIDs(cardTouched)) {
+            case 0:
+                isLegal = true;
+                break;
+        }
+        return isLegal;
+    }
+
     @Override
     public void drawCards(Canvas canvas) {
         for(int i=0; i<25; i++) {
             deck.get(i).draw(canvas);
         }
-
     }
 }
