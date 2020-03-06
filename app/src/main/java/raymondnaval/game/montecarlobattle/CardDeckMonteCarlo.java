@@ -58,13 +58,13 @@ public class CardDeckMonteCarlo extends CardDeck {
         }
     }
 
-    // TODO: Check if card is legal move.
-    public boolean isLegalMove(int cardTouched) {
+    public boolean isLegalMove(int cardTouched, int adjCard) {
         boolean isLegal = false;
-        switch(getCardIDs(cardTouched)) {
-            case 0:
-                isLegal = true;
-                break;
+        if(cardTouched == 65 || adjCard == 65) {
+            isLegal = true;
+        }
+        if(cardTouched % 13 == adjCard % 13) {
+            isLegal = true;
         }
         return isLegal;
     }

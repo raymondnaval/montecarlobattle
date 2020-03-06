@@ -4,8 +4,8 @@
     <facet type="android-gradle" name="Android-Gradle">
       <configuration>
         <option name="GRADLE_PROJECT_PATH" value=":app" />
-        <option name="LAST_SUCCESSFUL_SYNC_AGP_VERSION" value="3.5.3" />
-        <option name="LAST_KNOWN_AGP_VERSION" value="3.5.3" />
+        <option name="LAST_SUCCESSFUL_SYNC_AGP_VERSION" value="3.6.1" />
+        <option name="LAST_KNOWN_AGP_VERSION" value="3.6.1" />
       </configuration>
     </facet>
     <facet type="android" name="Android">
@@ -19,17 +19,17 @@
         <option name="ALLOW_USER_CONFIGURATION" value="false" />
         <option name="MANIFEST_FILE_RELATIVE_PATH" value="/src/main/AndroidManifest.xml" />
         <option name="RES_FOLDER_RELATIVE_PATH" value="/src/main/res" />
-        <option name="RES_FOLDERS_RELATIVE_PATH" value="file://$MODULE_DIR$/src/main/res;file://$MODULE_DIR$/build/generated/res/resValues/debug" />
+        <option name="RES_FOLDERS_RELATIVE_PATH" value="file://$MODULE_DIR$/src/main/res" />
         <option name="TEST_RES_FOLDERS_RELATIVE_PATH" value="" />
         <option name="ASSETS_FOLDER_RELATIVE_PATH" value="/src/main/assets" />
       </configuration>
     </facet>
     <facet type="kotlin-language" name="Kotlin">
-      <configuration version="3" platform="JVM 1.6" allPlatforms="JVM [1.6]" useProjectSettings="false" pureKotlinSourceFolders="$MODULE_DIR$/src/debug/kotlin;/Users/raymondnaval/StudioProjects/montecarlobattle/app/src/debug/java;/Users/raymondnaval/StudioProjects/montecarlobattle/app/src/release/kotlin;/Users/raymondnaval/StudioProjects/montecarlobattle/app/src/release/java;/Users/raymondnaval/StudioProjects/montecarlobattle/app/src/debugAndroidTest/kotlin;/Users/raymondnaval/StudioProjects/montecarlobattle/app/src/debugUnitTest/kotlin;/Users/raymondnaval/StudioProjects/montecarlobattle/app/src/releaseUnitTest/kotlin">
+      <configuration version="3" platform="JVM 1.6" allPlatforms="JVM [1.6]" useProjectSettings="false">
         <compilerSettings />
         <compilerArguments>
           <option name="destination" value="$MODULE_DIR$/build/tmp/kotlin-classes/debug" />
-          <option name="classpath" value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk8/1.3.10/71d0fa967493eb76648b575edf1762cb2d0c7f10/kotlin-stdlib-jdk8-1.3.10.jar:/Users/raymondnaval/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk7/1.3.10/4d147bf43060dc43d61b096e24da1e67dfe0c032/kotlin-stdlib-jdk7-1.3.10.jar:/Users/raymondnaval/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.3.10/b178c1501609c6e4ee8be635513cb023a466457d/kotlin-stdlib-1.3.10.jar:/Users/raymondnaval/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-common/1.3.10/1b19d99229dcedad7caf50534dce38fe82845269/kotlin-stdlib-common-1.3.10.jar:/Users/raymondnaval/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/Users/raymondnaval/.gradle/caches/transforms-2/files-2.1/395b3aa9db3147ebe0b79e2d901f93e4/appcompat-v7-26.1.0-api.jar:/Users/raymondnaval/.gradle/caches/transforms-2/files-2.1/fa6c655df0b95094b0535468227c80b7/animated-vector-drawable-26.1.0-api.jar:/Users/raymondnaval/.gradle/caches/transforms-2/files-2.1/f68a48663c204a1e2cbd3a8f50f0701c/support-vector-drawable-26.1.0-api.jar:/Users/raymondnaval/.gradle/caches/transforms-2/files-2.1/e7a51954bc3fb2cd8502bec72764bf24/support-v4-26.1.0-api.jar:/Users/raymondnaval/.gradle/caches/transforms-2/files-2.1/0abbe163fcd520ea9d33db5b682431ef/support-media-compat-26.1.0-api.jar:/Users/raymondnaval/.gradle/caches/transforms-2/files-2.1/53426ddd7130ee158b7d27bae42102f6/support-fragment-26.1.0-api.jar:/Users/raymondnaval/.gradle/caches/transforms-2/files-2.1/ba5ee127c2adedd00f94cfdbf29e972e/support-core-utils-26.1.0-api.jar:/Users/raymondnaval/.gradle/caches/transforms-2/files-2.1/1d74706b5515e9eba7dc220d0c0c6ce0/support-core-ui-26.1.0-api.jar:/Users/raymondnaval/.gradle/caches/transforms-2/files-2.1/65f09b731f3626cf7cca0495e7f05a42/support-compat-26.1.0-api.jar:/Users/raymondnaval/.gradle/caches/modules-2/files-2.1/com.android.support/support-annotations/26.1.0/814258103cf26a15fcc26ecce35f5b7d24b73f8/support-annotations-26.1.0.jar:/Users/raymondnaval/.gradle/caches/transforms-2/files-2.1/ea497213b7c665ca9f5b87256ee45fb9/runtime-1.0.0-api.jar:/Users/raymondnaval/.gradle/caches/modules-2/files-2.1/android.arch.lifecycle/common/1.0.0/e414a4cb28434e25c4f6aa71426eb20cf4874ae9/common-1.0.0.jar:/Users/raymondnaval/.gradle/caches/modules-2/files-2.1/android.arch.core/common/1.0.0/a2d487452376193fc8c103dd2b9bd5f2b1b44563/common-1.0.0.jar:/Users/raymondnaval/Library/Android/sdk/platforms/android-26/android.jar" />
+          <option name="classpath" value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk8/1.3.10/71d0fa967493eb76648b575edf1762cb2d0c7f10/kotlin-stdlib-jdk8-1.3.10.jar:/Users/raymondnaval/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk7/1.3.10/4d147bf43060dc43d61b096e24da1e67dfe0c032/kotlin-stdlib-jdk7-1.3.10.jar:/Users/raymondnaval/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.3.10/b178c1501609c6e4ee8be635513cb023a466457d/kotlin-stdlib-1.3.10.jar:/Users/raymondnaval/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-common/1.3.10/1b19d99229dcedad7caf50534dce38fe82845269/kotlin-stdlib-common-1.3.10.jar:/Users/raymondnaval/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/Users/raymondnaval/.gradle/caches/transforms-2/files-2.1/4171de5af84f252cfa52e500d831b2e1/appcompat-v7-26.1.0-api.jar:/Users/raymondnaval/.gradle/caches/transforms-2/files-2.1/a641cd05212d0d2cc4f4b04e0a789cfd/animated-vector-drawable-26.1.0-api.jar:/Users/raymondnaval/.gradle/caches/transforms-2/files-2.1/daeb761942bca8462c245eb36fdd7c05/support-vector-drawable-26.1.0-api.jar:/Users/raymondnaval/.gradle/caches/transforms-2/files-2.1/8537c9e5aa319bc5eeede51c47e170ef/support-v4-26.1.0-api.jar:/Users/raymondnaval/.gradle/caches/transforms-2/files-2.1/601c4add9295b704940ea71f09a56f73/support-media-compat-26.1.0-api.jar:/Users/raymondnaval/.gradle/caches/transforms-2/files-2.1/69b410d5a67d5ac443bb4ab37617d899/support-fragment-26.1.0-api.jar:/Users/raymondnaval/.gradle/caches/transforms-2/files-2.1/13249b651b615cde7ecce9944c68e0a7/support-core-utils-26.1.0-api.jar:/Users/raymondnaval/.gradle/caches/transforms-2/files-2.1/d7c9b03e51a7e42aa576270c9e3a0369/support-core-ui-26.1.0-api.jar:/Users/raymondnaval/.gradle/caches/transforms-2/files-2.1/b7e2b3cb7031325f9719d81da6917c01/support-compat-26.1.0-api.jar:/Users/raymondnaval/.gradle/caches/modules-2/files-2.1/com.android.support/support-annotations/26.1.0/814258103cf26a15fcc26ecce35f5b7d24b73f8/support-annotations-26.1.0.jar:/Users/raymondnaval/.gradle/caches/transforms-2/files-2.1/142961bba1d429e83a1123feed5af298/runtime-1.0.0-api.jar:/Users/raymondnaval/.gradle/caches/modules-2/files-2.1/android.arch.lifecycle/common/1.0.0/e414a4cb28434e25c4f6aa71426eb20cf4874ae9/common-1.0.0.jar:/Users/raymondnaval/.gradle/caches/modules-2/files-2.1/android.arch.core/common/1.0.0/a2d487452376193fc8c103dd2b9bd5f2b1b44563/common-1.0.0.jar:/Users/raymondnaval/Library/Android/sdk/platforms/android-26/android.jar" />
           <option name="noStdlib" value="true" />
           <option name="noReflect" value="true" />
           <option name="moduleName" value="app_debug" />
@@ -59,18 +59,16 @@
     <output-test url="file://$MODULE_DIR$/build/intermediates/javac/debugUnitTest/classes" />
     <exclude-output />
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/ap_generated_sources/debug/out" isTestSource="false" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/aidl_source_output_dir/debug/compileDebugAidl/out" isTestSource="false" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/source/buildConfig/debug" isTestSource="false" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/renderscript_source_output_dir/debug/compileDebugRenderscript/out" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/renderscript_source_output_dir/debug/out" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/ap_generated_sources/debug/out" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/aidl_source_output_dir/debug/out" isTestSource="false" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/res/rs/debug" type="java-resource" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/resValues/debug" type="java-resource" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/aidl_source_output_dir/debugAndroidTest/out" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/renderscript_source_output_dir/debugAndroidTest/out" isTestSource="true" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/ap_generated_sources/debugAndroidTest/out" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/aidl_source_output_dir/debugAndroidTest/compileDebugAndroidTestAidl/out" isTestSource="true" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/source/buildConfig/androidTest/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/renderscript_source_output_dir/debugAndroidTest/compileDebugAndroidTestRenderscript/out" isTestSource="true" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/res/rs/androidTest/debug" type="java-test-resource" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/resValues/androidTest/debug" type="java-test-resource" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/ap_generated_sources/debugUnitTest/out" isTestSource="true" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/resources" type="java-resource" />

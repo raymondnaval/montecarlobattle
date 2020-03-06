@@ -6,6 +6,8 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.Log;
 
+import java.util.HashMap;
+
 /**
  * This class will be used to track the position of each card in the 5x5 tableau.
  * It will count linearly from the top left to the bottom right, 0 to 24. For each position, this
@@ -17,7 +19,11 @@ public class CardTableauLayout {
     private int[] leftPositions, topPositions, rightPositions, bottomPositions;
     private Rect[] cardCoordinates;
     private boolean[] cardsSelected;
-    private int cardWidthGap, cardHeightGap;
+    private int cardWidthGap, cardHeightGap, numSelected = 0;
+
+    // The first-most and last-most cards selected in tableau.
+    private int firstMost = -1, lastMost = 25;
+
     private Paint outlineP;
 
     public CardTableauLayout(int topTableauBorder) {
@@ -30,91 +36,88 @@ public class CardTableauLayout {
         setPositions();
     }
 
-    // TODO: Check if card selected is in legal position. Suggestion: track last 5 cards selected.
     public void cardSelected(int position) {
 
         if (cardsSelected[position]) {
             cardsSelected[position] = false;
-        } else {
+            numSelected--;
+            if (numSelected > 1) {
 
-            // Check all four sides of the selected card.
-            boolean leftSideSelected = false, rightSideSelected = false, topSideSelected = false,
-                    bottomSideSelected = false;
-
-            /* Check if card to the left is selected. */
-            // Do not check cards already on the left side.
-            if (position % 5 != 0) {
-                if (cardsSelected[position - 1]) {
-                    leftSideSelected = true;
-                }
-            }
-
-            /* Check if card to the right is selected. */
-            // Do not check cards on the right side.
-            if ((position + 1) % 5 != 0) {
-                if (cardsSelected[position + 1]) {
-                    rightSideSelected = true;
-                }
-            }
-
-            /* Check if card to the top is selected. */
-            // Do not check cards on the top side.
-            if (position > 4) {
-                if (cardsSelected[position - 5]) {
-                    topSideSelected = true;
-                }
-            }
-
-            /* Check if card to the bottom is selected. */
-            // Do not check cards on the bottom side.
-            if (position < 20) {
-                if (cardsSelected[position + 5]) {
-                    bottomSideSelected = true;
-                }
-            }
-
-            // If no cards are selected, card is selected.
-            if (numCardsSelected() == 0) {
-                cardsSelected[position] = true;
-            } else {
-
-                if (leftSideSelected && !rightSideSelected && !topSideSelected && !bottomSideSelected) {
-
-                    // Check if cards to the top and bottom right are selected. If not, set to true.
-                    if (position <= 4 && !cardsSelected[position + 6]) {
-                        cardsSelected[position] = true;
-                    } else if (position >= 20 && !cardsSelected[position - 4]) {
-                        cardsSelected[position] = true;
-                    } else {
-                        if(!cardsSelected[position + 6] && !cardsSelected[position - 4]) {
-                            cardsSelected[position] = true;
+                // If un-selecting the first-most card, loop until the next positive card.
+                if (position == firstMost) {
+                    for (int i = position + 1; i < lastMost; i++) {
+                        if (cardsSelected[i]) {
+                            firstMost = i;
+                            break;
                         }
                     }
+                }
 
+                // If un-selecting the last-most card, loop back until the next positive card.
+                if (position == lastMost) {
+                    for (int i = position - 1; i > firstMost; i--) {
+                        if (cardsSelected[i]) {
+                            lastMost = i;
+                            break;
+                        }
+                    }
+                }
+            } else if (numSelected == 1){
 
+                // If number of cards selected is one, set first-most and last-most card to that
+                // card.
+                for (int i = firstMost; i <= lastMost; i++) {
+                    if(cardsSelected[i]) {
+                        firstMost = i;
+                        lastMost = i;
+                    }
                 }
-                if (!leftSideSelected && rightSideSelected && !topSideSelected && !bottomSideSelected) {
-                    cardsSelected[position] = true;
+            } else {
+
+                // If no cards are selected, reset to default values.
+                firstMost = -1;
+                lastMost = 25;
+            }
+
+        } else {
+            cardsSelected[position] = true;
+            numSelected++;
+
+            if (numSelected == 1) {
+                firstMost = position;
+                lastMost = position;
+            } else {
+                if (position < firstMost) {
+                    firstMost = position;
                 }
-                if (!leftSideSelected && !rightSideSelected && topSideSelected && !bottomSideSelected) {
-                    cardsSelected[position] = true;
-                }
-                if (!leftSideSelected && !rightSideSelected && !topSideSelected && bottomSideSelected) {
-                    cardsSelected[position] = true;
+                if (position > lastMost) {
+                    lastMost = position;
                 }
             }
+
         }
-        Log.i("CardTableauLayout", "cardsSelected: " + cardsSelected[position]);
+        Log.i("CardTableauLayout", "cardsSelected: " + cardsSelected[position]
+                + " last most: " + lastMost + " first most: " + firstMost);
     }
 
-    public int numCardsSelected() {
-        int numSelected = 0;
-        for (int i = 0; i < cardsSelected.length; i++) {
-            if (cardsSelected[i]) {
-                numSelected++;
-            }
+    public int getFirstMostCard() {
+        return firstMost;
+    }
+
+    public int getLastMostCard() {
+        return lastMost;
+    }
+
+    public boolean atLeast2CardsSelected() {
+        boolean twoSelected = false;
+        if(numSelected > 1) {
+            twoSelected = true;
         }
-        return numSelected;
+        return twoSelected;
+    }
+
+    public boolean[] isCardsSelected() {
+        return cardsSelected;
     }
 
     public void drawSelectedCards(Canvas canvas) {

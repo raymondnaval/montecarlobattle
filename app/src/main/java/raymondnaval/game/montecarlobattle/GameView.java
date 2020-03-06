@@ -26,7 +26,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private DisplayThread thread;
     private int verticalCenter, horizontalCenter, actionHUDHeight,
             tableauFieldHeight, cardHeightGap, cardWidthGap;
-    private Paint topPlayerHUDPaint, bottomPlayerHUDPaint, actionHUDPaint, tableauSpacePaint;
+    private Paint topPlayerHUDPaint, bottomPlayerHUDPaint, actionHUDPaint, tableauSpacePaint,
+        clearButtonPaint;
     private CardTableauLayout ctLayout;
     private CardDeckMonteCarlo cards;
     private Drawable cardTest, cardTest1, cardTest2, cardTest3, cardTest4, cardTest5, cardTest6, cardTest7, cardTest8, cardTest9, cardTest10, cardTest11;
@@ -46,8 +47,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         horizontalCenter = GameConstants.SCREEN_WIDTH / 2;
         tableauFieldHeight = GameConstants.SCREEN_HEIGHT * 7 / 12;
 
-        ctLayout = new CardTableauLayout(GameConstants.PLAYER_HUD_SIZE);
         cards = new CardDeckMonteCarlo(mContext);
+        ctLayout = new CardTableauLayout(GameConstants.PLAYER_HUD_SIZE);
 
 //        // X coordinates for 4- and 6-column tableau.
 //        col1X = (horizontalCenter) - (horzGap / 2) - (horzGap * 2) - (GameConstants.CARD_WIDTH * 3);
@@ -233,6 +234,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         actionHUDPaint = new Paint();
         actionHUDPaint.setColor(Color.BLUE);
         actionHUDPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+
+        // Clear button on action HUD.
+        clearButtonPaint = new Paint();
+        clearButtonPaint.setColor(Color.WHITE);
+        clearButtonPaint.setStyle(Paint.Style.FILL);
 //
 //        // Combo moving text flair.
 //        comboFlairTextPaint = new Paint();
@@ -268,14 +274,24 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public void draw(Canvas canvas) {
         super.draw(canvas);
         canvas.drawColor(Color.GRAY);
+        // Top HUD.
         canvas.drawRect(0, 0, GameConstants.SCREEN_WIDTH, GameConstants.PLAYER_HUD_SIZE,
                 topPlayerHUDPaint);
+
+        // Bottom HUD.
         canvas.drawRect(0, GameConstants.PLAYER_HUD_SIZE + tableauFieldHeight,
                 GameConstants.SCREEN_WIDTH, (GameConstants.PLAYER_HUD_SIZE * 2) + tableauFieldHeight,
                 bottomPlayerHUDPaint);
+
+        // Action HUD.
         canvas.drawRect(0, (GameConstants.PLAYER_HUD_SIZE * 2) + tableauFieldHeight,
                 GameConstants.SCREEN_WIDTH, GameConstants.SCREEN_HEIGHT,
                 actionHUDPaint);
+
+        // Clear cards button.
+        canvas.drawRect(1, (GameConstants.PLAYER_HUD_SIZE * 2) + tableauFieldHeight + 1,
+                GameConstants.CARD_WIDTH * 3, GameConstants.SCREEN_HEIGHT - 1,
+                clearButtonPaint);
         cards.drawCards(canvas);
         ctLayout.drawSelectedCards(canvas);
     }
@@ -464,6 +480,25 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 e.printStackTrace();
             }
             retry = false;
+        }
+    }
+
+    /**
+     * TODO: Figure out how to iterate through array and find all the selected matching cards.
+     */
+    public void clearSelectedCards() {
+        for (int i = ctLayout.getFirstMostCard(); i <= ctLayout.getLastMostCard(); i++) {
+            if(ctLayout.isCardsSelected()[i]) {
+                boolean horzValid = false;
+                boolean vertValid = false;
+                int horzCount = 1;
+                int vertCount = 1;
+                int start = ctLayout.getFirstMostCard();
+                if(cards.isLegalMove(cards.getCardIDs(start),cards.getCardIDs(start+1))) {
+                    horzCount++;
+
+                }
+            }
         }
     }
 
