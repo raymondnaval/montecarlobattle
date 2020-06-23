@@ -12,13 +12,14 @@ import java.util.HashMap;
  * This class will be used to track the position of each card in the 5x5 tableau.
  * It will count linearly from the top left to the bottom right, 0 to 24. For each position, this
  * class will track the valid positions left, right above and below.
+ * TODO: Remove selected cards and update tableau.
  */
 public class CardTableauLayout {
 
     private int topTableauBorder;
     private int[] leftPositions, topPositions, rightPositions, bottomPositions;
     private Rect[] cardCoordinates;
-    private boolean[] cardsSelected;
+    private boolean[] cardsSelected, clearedCards;
     private int cardWidthGap, cardHeightGap, numSelected = 0;
 
     // The first-most and last-most cards selected in tableau.
@@ -33,13 +34,14 @@ public class CardTableauLayout {
         outlineP = new Paint();
         outlineP.setColor(Color.YELLOW);
         outlineP.setStyle(Paint.Style.STROKE);
+        cardCoordinates = new Rect[25];
         setPositions();
     }
 
     public void cardSelected(int position) {
 
         if (cardsSelected[position]) {
-            cardsSelected[position] = false;
+//            cardsSelected[position] = false;
             numSelected--;
             if (numSelected > 1) {
 
@@ -62,12 +64,12 @@ public class CardTableauLayout {
                         }
                     }
                 }
-            } else if (numSelected == 1){
+            } else if (numSelected == 1) {
 
                 // If number of cards selected is one, set first-most and last-most card to that
                 // card.
                 for (int i = firstMost; i <= lastMost; i++) {
-                    if(cardsSelected[i]) {
+                    if (cardsSelected[i]) {
                         firstMost = i;
                         lastMost = i;
                     }
@@ -100,6 +102,17 @@ public class CardTableauLayout {
                 + " last most: " + lastMost + " first most: " + firstMost);
     }
 
+    /**
+     * Clear selected cards from tableau.
+     */
+    public void clearSelected() {
+        for (int i = 0; i < cardsSelected.length; i++) {
+            if(cardsSelected[i]) {
+                clearedCards[i] = true;
+            }
+        }
+    }
+
     public int getFirstMostCard() {
         return firstMost;
     }
@@ -110,7 +123,7 @@ public class CardTableauLayout {
 
     public boolean atLeast2CardsSelected() {
         boolean twoSelected = false;
-        if(numSelected > 1) {
+        if (numSelected > 1) {
             twoSelected = true;
         }
         return twoSelected;
@@ -122,7 +135,9 @@ public class CardTableauLayout {
 
     public void drawSelectedCards(Canvas canvas) {
         for (int i = 0; i < cardsSelected.length; i++) {
-            if (cardsSelected[i]) {
+
+            // If card is selected but not cleared yet, draw the selection outline.
+            if (cardsSelected[i] && !clearedCards[i]) {
                 canvas.drawRect(cardCoordinates[i].left - (cardWidthGap / 4),
                         cardCoordinates[i].top - (cardHeightGap / 4),
                         cardCoordinates[i].right + (cardWidthGap / 4),
@@ -138,7 +153,6 @@ public class CardTableauLayout {
     }
 
     private void setPositions() {
-        cardCoordinates = new Rect[25];
         cardCoordinates[0] = new Rect(
                 cardWidthGap,
                 cardHeightGap + topTableauBorder,
@@ -217,10 +231,12 @@ public class CardTableauLayout {
         cardCoordinates[24] = new Rect(cardCoordinates[4].left, cardCoordinates[20].top,
                 cardCoordinates[4].right, cardCoordinates[20].bottom);
 
-        // Initialize all cards as unselected.
+        // Initialize all cards as unselected and uncleared.
         cardsSelected = new boolean[25];
+        clearedCards = new boolean[25];
         for (int i = 0; i < cardsSelected.length; i++) {
             cardsSelected[i] = false;
+            clearedCards[i] = false;
         }
     }
 

@@ -27,7 +27,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private int verticalCenter, horizontalCenter, actionHUDHeight,
             tableauFieldHeight, cardHeightGap, cardWidthGap;
     private Paint topPlayerHUDPaint, bottomPlayerHUDPaint, actionHUDPaint, tableauSpacePaint,
-        clearButtonPaint;
+            clearButtonPaint, refreshButtonPaint;
+    private Rect clearButton, refreshButton;
     private CardTableauLayout ctLayout;
     private CardDeckMonteCarlo cards;
     private Drawable cardTest, cardTest1, cardTest2, cardTest3, cardTest4, cardTest5, cardTest6, cardTest7, cardTest8, cardTest9, cardTest10, cardTest11;
@@ -47,8 +48,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         horizontalCenter = GameConstants.SCREEN_WIDTH / 2;
         tableauFieldHeight = GameConstants.SCREEN_HEIGHT * 7 / 12;
 
-        cards = new CardDeckMonteCarlo(mContext);
         ctLayout = new CardTableauLayout(GameConstants.PLAYER_HUD_SIZE);
+        cards = new CardDeckMonteCarlo(mContext, ctLayout);
 
 //        // X coordinates for 4- and 6-column tableau.
 //        col1X = (horizontalCenter) - (horzGap / 2) - (horzGap * 2) - (GameConstants.CARD_WIDTH * 3);
@@ -239,6 +240,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         clearButtonPaint = new Paint();
         clearButtonPaint.setColor(Color.WHITE);
         clearButtonPaint.setStyle(Paint.Style.FILL);
+
+        // Refresh button on action HUD.
+        refreshButtonPaint = new Paint();
+        refreshButtonPaint.setColor(Color.YELLOW);
+        refreshButtonPaint.setStyle(Paint.Style.FILL);
 //
 //        // Combo moving text flair.
 //        comboFlairTextPaint = new Paint();
@@ -247,11 +253,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 //        comboFlairTextX = col4X + horzGap;
 //        comboFlairTextY = GameConstants.CARD_HEIGHT;
 //
-//        // Fail safe paint outline.
-//        failSafePaint = new Paint();
-//        failSafePaint.setStyle(Paint.Style.STROKE);
-//        failSafePaint.setStrokeWidth(2.0f);
-//        failSafePaint.setColor(mContext.getResources().getColor(R.color.app_orange));
+        // Parameters for the Clear button.
+        clearButton = new Rect(1, (GameConstants.PLAYER_HUD_SIZE * 2) + tableauFieldHeight + 1,
+                GameConstants.SCREEN_WIDTH * 2 / 7, GameConstants.SCREEN_HEIGHT - 1);
+
+        refreshButton = new Rect((GameConstants.SCREEN_WIDTH * 2 / 7) + 1, (GameConstants
+                .PLAYER_HUD_SIZE * 2) + tableauFieldHeight + 1, (GameConstants
+                .SCREEN_WIDTH * 5 / 7) - 1, GameConstants.SCREEN_HEIGHT - 1);
 //
 //        // Timer
 //        if (!isNoTime) {
@@ -289,9 +297,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 actionHUDPaint);
 
         // Clear cards button.
-        canvas.drawRect(1, (GameConstants.PLAYER_HUD_SIZE * 2) + tableauFieldHeight + 1,
-                GameConstants.CARD_WIDTH * 3, GameConstants.SCREEN_HEIGHT - 1,
-                clearButtonPaint);
+        canvas.drawRect(clearButton, clearButtonPaint);
+
+        // Refresh cards button.
+        canvas.drawRect(refreshButton, refreshButtonPaint);
+
         cards.drawCards(canvas);
         ctLayout.drawSelectedCards(canvas);
     }
@@ -444,11 +454,19 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     && event.getY() <= ctLayout.getPosition(23).bottom + (ctLayout.getCardHeightGap() / 2)) {
                 ctLayout.cardSelected(23);
             }
-            if ((event.getX() >= ctLayout.getPosition(24).left - (ctLayout.getCardWidthGap() / 2)
-                    && event.getX() <= ctLayout.getPosition(24).right + (ctLayout.getCardWidthGap() / 2)) &&
-                    event.getY() >= ctLayout.getPosition(24).top - (ctLayout.getCardHeightGap() / 2)
-                    && event.getY() <= ctLayout.getPosition(24).bottom + (ctLayout.getCardHeightGap() / 2)) {
+            if ((event.getX() >= ctLayout.getPosition(24).left - ((float) ctLayout.getCardWidthGap() / 2)
+                    && event.getX() <= ctLayout.getPosition(24).right + ((float) ctLayout.getCardWidthGap() / 2)) &&
+                    event.getY() >= ctLayout.getPosition(24).top - ((float) ctLayout.getCardHeightGap() / 2)
+                    && event.getY() <= ctLayout.getPosition(24).bottom + ((float) ctLayout.getCardHeightGap() / 2)) {
                 ctLayout.cardSelected(24);
+            }
+
+            // Clear cards button.
+            if ((event.getX() >= clearButton.left && event.getX() <= clearButton.right)
+                    && event.getY() >= clearButton.top && event.getY() <= clearButton.bottom) {
+                Log.i(TAG, "Clear button");
+                cards.setClearSelected(true);
+                ctLayout.clearSelected();
             }
             return true;
         }
@@ -487,19 +505,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
      * TODO: Figure out how to iterate through array and find all the selected matching cards.
      */
     public void clearSelectedCards() {
-        for (int i = ctLayout.getFirstMostCard(); i <= ctLayout.getLastMostCard(); i++) {
-            if(ctLayout.isCardsSelected()[i]) {
-                boolean horzValid = false;
-                boolean vertValid = false;
-                int horzCount = 1;
-                int vertCount = 1;
-                int start = ctLayout.getFirstMostCard();
-                if(cards.isLegalMove(cards.getCardIDs(start),cards.getCardIDs(start+1))) {
-                    horzCount++;
-
-                }
-            }
-        }
     }
 
     public void stopThread() {
