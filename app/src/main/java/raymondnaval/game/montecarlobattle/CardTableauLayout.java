@@ -17,6 +17,7 @@ import java.util.HashMap;
  */
 public class CardTableauLayout {
 
+    private final String TAG = "CardTableauLayout";
     private int topTableauBorder;
     private int[] leftPositions, topPositions, rightPositions, bottomPositions;
     private Rect[] cardCoordinates;
@@ -43,12 +44,10 @@ public class CardTableauLayout {
         cards = new CardDeckMonteCarlo(mContext, cardCoordinates);
     }
 
-
-
     public void cardSelected(int position) {
 
         if (cardsSelected[position]) {
-//            cardsSelected[position] = false;
+            cardsSelected[position] = false;
             numSelected--;
             if (numSelected > 1) {
 
@@ -82,10 +81,7 @@ public class CardTableauLayout {
                     }
                 }
             } else {
-
-                // If no cards are selected, reset to default values.
-                firstMost = -1;
-                lastMost = 25;
+                resetFirstAndLast();
             }
 
         } else {
@@ -106,7 +102,8 @@ public class CardTableauLayout {
 
         }
         Log.i("CardTableauLayout", "cardsSelected: " + cardsSelected[position]
-                + " last most: " + lastMost + " first most: " + firstMost);
+                + " last most: " + lastMost + " first most: " + firstMost + " num selected: " +
+                numSelected + " card position: " + position);
     }
 
     /**
@@ -114,14 +111,91 @@ public class CardTableauLayout {
      * TODO: Check if selection is valid before clearing cards.
      */
     public void clearSelected() {
+        Log.i(TAG, "clearSelected -- firstMost: " + firstMost + " lastMost: " + lastMost);
 
-        for (int i = 0; i < cardsSelected.length; i++) {
-            if(cardsSelected[i]) {
-                clearedCards[i] = true;
+        // Check if selection is valid.
+        boolean isValid = true;
+        boolean horSelection = false;
+        boolean verSelection = false;
+
+        // If at least 2 cards are selected, check if they're valid selections.
+        if (atLeast2CardsSelected()) {
+
+            // Loop from the first selected card to the last selected card.
+            int i = firstMost;
+            while (i < lastMost) {
+
+                // pos is used to determine if the iteration needs to jump ahead.
+                int pos = i;
+
+                // If card is selected.
+                if (cardsSelected[i]) {
+
+                    // If the card to the right is at or before the last card selected and is
+                    // selected, increment pos to the position to the right.
+                    if (i + 1 <= lastMost && !verSelection) {
+                        if (cardsSelected[i + 1]) {
+                            pos = i + 1;
+                            Log.i(TAG, "clearSelected -- i: " + i + " i+1: " + pos);
+                            horSelection = true;
+                        }
+                    }
+
+                    // If the card below is at or before the last card selected and is selected,
+                    // increment pos to the position below.
+                    if (i + 5 <= lastMost && !horSelection) {
+                        if (cardsSelected[i + 5]) {
+                            boolean unselectedBetweenThe5 = true;
+                            for (int j = i + 1; j < i + 5; j++) {
+                                Log.i(TAG, "clearSelected -- selected[j]: " + cardsSelected[j] + " j: " + j);
+                                if (cardsSelected[j]) {
+                                    unselectedBetweenThe5 = false;
+                                    break;
+                                }
+                            }
+                            if (unselectedBetweenThe5) {
+                                pos = i + 5;
+                            }
+
+                            Log.i(TAG, "clearSelected -- i: " + i + " i+5: " + pos);
+                            verSelection = true;
+                        }
+                    }
+
+                    // If the pos doesn't shift to the right or below, the selection isn't valid.
+                    // Else move the iterator to the new pos position.
+                    if (pos == i) {
+                        isValid = false;
+                    } else {
+                        i = pos;
+                    }
+                } else {
+                    i++;
+                }
+                if (!isValid) {
+                    break;
+                }
             }
         }
-        cards.setUpdateCardsSelected(clearedCards);
+        if (isValid) {
+            for (int i = 0; i < cardsSelected.length; i++) {
+                if (cardsSelected[i]) {
+                    clearedCards[i] = true;
+                }
+            }
+            cards.setUpdateCardsSelected(clearedCards);
+            resetFirstAndLast();
+        } else {
+            clearSelection();
+        }
+    }
 
+    // If no cards are selected, reset to default values and clear all selected cards.
+    private void resetFirstAndLast() {
+        firstMost = -1;
+        lastMost = 25;
+        numSelected = 0;
+        clearSelection();
     }
 
     public int getFirstMostCard() {
@@ -142,6 +216,15 @@ public class CardTableauLayout {
 
     public boolean[] isCardsSelected() {
         return cardsSelected;
+    }
+
+    // Clear all selected cards.
+    private void clearSelection() {
+        for (int i = 0; i < cardsSelected.length; i++) {
+            cardsSelected[i] = false;
+            Log.i(TAG, "clearSelection -- i: " + i + " cardsSelected[i]: " + cardsSelected[i]);
+        }
+        numSelected = 0;
     }
 
     public void drawSelectedCards(Canvas canvas) {
@@ -246,8 +329,8 @@ public class CardTableauLayout {
         // Initialize all cards as unselected and uncleared.
         cardsSelected = new boolean[25];
         clearedCards = new boolean[25];
+        clearSelection();
         for (int i = 0; i < cardsSelected.length; i++) {
-            cardsSelected[i] = false;
             clearedCards[i] = false;
         }
     }
