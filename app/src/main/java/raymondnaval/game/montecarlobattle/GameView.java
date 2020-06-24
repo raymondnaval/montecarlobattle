@@ -30,8 +30,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             clearButtonPaint, refreshButtonPaint;
     private Rect clearButton, refreshButton;
     private CardTableauLayout ctLayout;
-    private CardDeckMonteCarlo cards;
-    private Drawable cardTest, cardTest1, cardTest2, cardTest3, cardTest4, cardTest5, cardTest6, cardTest7, cardTest8, cardTest9, cardTest10, cardTest11;
 
     public GameView(Context context) {
         super(context);
@@ -48,8 +46,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         horizontalCenter = GameConstants.SCREEN_WIDTH / 2;
         tableauFieldHeight = GameConstants.SCREEN_HEIGHT * 7 / 12;
 
-        ctLayout = new CardTableauLayout(GameConstants.PLAYER_HUD_SIZE);
-        cards = new CardDeckMonteCarlo(mContext, ctLayout);
+        ctLayout = new CardTableauLayout(mContext, GameConstants.PLAYER_HUD_SIZE);
 
 //        // X coordinates for 4- and 6-column tableau.
 //        col1X = (horizontalCenter) - (horzGap / 2) - (horzGap * 2) - (GameConstants.CARD_WIDTH * 3);
@@ -84,18 +81,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 //        int stackY = verticalCenter + (verticalCenter / 4);
 //        stackPos = new Rect(stackX, stackY, stackX + GameConstants.CARD_WIDTH, stackY
 //                + GameConstants.CARD_HEIGHT);
-//
-//        // Booster card. Add 4 random cards to top of Stack pile.
-//        if (isBigDeck) {
-//            cardsRemainingInStack += 4;
-//            cardDeck.addCards(4, stackPos, false);
-//        }
-//
-//        // Booster card. Add 7 random cards to top of Stack pile.
-//        if (isBiggerDeck) {
-//            cardsRemainingInStack += 7;
-//            cardDeck.addCards(7, stackPos, false);
-//        }
 //
 //        // If Peeker Booster is used, position the top stack card. Else position the last card in
 //        // the deck (back of the deck card).
@@ -260,22 +245,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         refreshButton = new Rect((GameConstants.SCREEN_WIDTH * 2 / 7) + 1, (GameConstants
                 .PLAYER_HUD_SIZE * 2) + tableauFieldHeight + 1, (GameConstants
                 .SCREEN_WIDTH * 5 / 7) - 1, GameConstants.SCREEN_HEIGHT - 1);
-//
-//        // Timer
-//        if (!isNoTime) {
-//            timerPaint = new Paint();
-//            timerPaint.setColor(mContext.getResources().getColor(R.color.white));
-//            timerPaint.setTextSize(48f);
-//            timerX = col1X;
-//            timerY = tokenTextPosY;
-//            timePromptPaint = new Paint();
-//            timePromptPaint.setColor(mContext.getResources().getColor(R.color.white));
-//            timePromptPaint.setTextSize(30f);
-//            timePX = timerX;
-//            timePY = timerY / 2;
-//        }
-//
-//
     }
 
     @Override
@@ -302,7 +271,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         // Refresh cards button.
         canvas.drawRect(refreshButton, refreshButtonPaint);
 
-        cards.drawCards(canvas);
+//        cards.drawCards(canvas);
         ctLayout.drawSelectedCards(canvas);
     }
 
@@ -465,7 +434,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             if ((event.getX() >= clearButton.left && event.getX() <= clearButton.right)
                     && event.getY() >= clearButton.top && event.getY() <= clearButton.bottom) {
                 Log.i(TAG, "Clear button");
-                cards.setClearSelected(true);
                 ctLayout.clearSelected();
             }
             return true;
@@ -499,12 +467,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             }
             retry = false;
         }
-    }
-
-    /**
-     * TODO: Figure out how to iterate through array and find all the selected matching cards.
-     */
-    public void clearSelectedCards() {
     }
 
     public void stopThread() {

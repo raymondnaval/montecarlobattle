@@ -23,17 +23,16 @@ public class CardDeckMonteCarlo extends CardDeck {
     private final String TAG = "CardDeckMonteCarlo";
     private Drawable cardTest;
     private Context mContext;
-    private Rect rect;
+    private Rect[] cardPositions;
     private ArrayList<Card> deck;
-    private CardTableauLayout ctl;
     private boolean clearSelected = false, refreshTableau = true;
     private boolean[] updateCardsSelected = new boolean[25];
 
-    public CardDeckMonteCarlo(Context context, CardTableauLayout ctl) {
+    public CardDeckMonteCarlo(Context context, Rect[] cardPositions) {
         super(context, false, false, false, 1, -1);
         mContext = context;
+        this.cardPositions = cardPositions;
         deck = new ArrayList<>();
-        this.ctl = ctl;
 
         // Initialize all cards as unselected.
         updateCardsSelected = new boolean[25];
@@ -64,8 +63,12 @@ public class CardDeckMonteCarlo extends CardDeck {
         }
 
         for(int i=0; i<25; i++) {
-            deck.get(i).setCardPosition(ctl.getPosition(i));
+            deck.get(i).setCardPosition(cardPositions[i]);
         }
+    }
+
+    public void setCardPosition(Rect[] cardPositions) {
+
     }
 
     public boolean isLegalMove(int cardTouched, int adjCard) {
@@ -79,27 +82,13 @@ public class CardDeckMonteCarlo extends CardDeck {
         return isLegal;
     }
 
-    public void setClearSelected(boolean clearSelected) {
-        this.clearSelected = clearSelected;
-    }
-
-    public boolean getClearSelected() {
-        return clearSelected;
+    public void setUpdateCardsSelected(boolean[] isCardsSelected) {
+        updateCardsSelected = isCardsSelected;
+        clearSelected = true;
     }
 
     @Override
     public void drawCards(Canvas canvas) {
-        for(int i=0; i<25; i++) {
-
-            // If player clears selection, updateCardsSelected array will copy which cards have been
-            // selected. At the end of the array, set clearSelected back to false.
-            if(clearSelected) {
-                updateCardsSelected[i] = ctl.isCardsSelected()[i];
-                if(i==24) {
-                    clearSelected = false;
-                }
-            }
-        }
         for(int i=0; i<25; i++) {
 
             // Draw only the cards that are unselected.

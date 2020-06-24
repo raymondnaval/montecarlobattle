@@ -1,5 +1,6 @@
 package raymondnaval.game.montecarlobattle;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -20,14 +21,17 @@ public class CardTableauLayout {
     private int[] leftPositions, topPositions, rightPositions, bottomPositions;
     private Rect[] cardCoordinates;
     private boolean[] cardsSelected, clearedCards;
+    private CardDeckMonteCarlo cards;
     private int cardWidthGap, cardHeightGap, numSelected = 0;
+    private Context mContext;
 
     // The first-most and last-most cards selected in tableau.
     private int firstMost = -1, lastMost = 25;
 
     private Paint outlineP;
 
-    public CardTableauLayout(int topTableauBorder) {
+    public CardTableauLayout(Context context, int topTableauBorder) {
+        mContext = context;
         this.topTableauBorder = topTableauBorder;
         cardWidthGap = (GameConstants.SCREEN_WIDTH - (GameConstants.CARD_WIDTH * 5)) / 6;
         cardHeightGap = ((GameConstants.SCREEN_HEIGHT * 7 / 12) - (GameConstants.CARD_HEIGHT * 5)) / 6;
@@ -36,7 +40,10 @@ public class CardTableauLayout {
         outlineP.setStyle(Paint.Style.STROKE);
         cardCoordinates = new Rect[25];
         setPositions();
+        cards = new CardDeckMonteCarlo(mContext, cardCoordinates);
     }
+
+
 
     public void cardSelected(int position) {
 
@@ -104,13 +111,17 @@ public class CardTableauLayout {
 
     /**
      * Clear selected cards from tableau.
+     * TODO: Check if selection is valid before clearing cards.
      */
     public void clearSelected() {
+
         for (int i = 0; i < cardsSelected.length; i++) {
             if(cardsSelected[i]) {
                 clearedCards[i] = true;
             }
         }
+        cards.setUpdateCardsSelected(clearedCards);
+
     }
 
     public int getFirstMostCard() {
@@ -134,6 +145,7 @@ public class CardTableauLayout {
     }
 
     public void drawSelectedCards(Canvas canvas) {
+        cards.drawCards(canvas);
         for (int i = 0; i < cardsSelected.length; i++) {
 
             // If card is selected but not cleared yet, draw the selection outline.
