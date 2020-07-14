@@ -73,10 +73,10 @@ public class CardDeckMonteCarlo extends CardDeck {
 
     public boolean isLegalMove(int cardTouched, int adjCard) {
         boolean isLegal = false;
-        if(cardTouched == 65 || adjCard == 65) {
+        if(deck.get(cardTouched).getCardID() == 65 || deck.get(adjCard).getCardID() == 65) {
             isLegal = true;
         }
-        if(cardTouched % 13 == adjCard % 13) {
+        if(deck.get(cardTouched).getCardID() % 13 == deck.get(adjCard).getCardID() % 13) {
             isLegal = true;
         }
         return isLegal;

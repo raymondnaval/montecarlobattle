@@ -115,6 +115,7 @@ public class CardTableauLayout {
 
         // Check if selection is valid.
         boolean isValid = true;
+        boolean isValidLinearSelection = true;
         boolean horSelection = false;
         boolean verSelection = false;
 
@@ -165,18 +166,38 @@ public class CardTableauLayout {
                     // If the pos doesn't shift to the right or below, the selection isn't valid.
                     // Else move the iterator to the new pos position.
                     if (pos == i) {
-                        isValid = false;
+                        isValidLinearSelection = false;
                     } else {
                         i = pos;
                     }
                 } else {
                     i++;
                 }
-                if (!isValid) {
+                if (!isValidLinearSelection) {
                     break;
                 }
             }
+
+            if (isValidLinearSelection) {
+                if (horSelection) {
+                    for (int j = firstMost; j < lastMost; j++) {
+                        if (!cards.isLegalMove(j, j + 1)) {
+                            isValid = false;
+                            break;
+                        }
+                    }
+                } else {
+                    for (int j = firstMost; j < lastMost; j += 5) {
+                        if (!cards.isLegalMove(j, j + 5)) {
+                            isValid = false;
+                            break;
+                        }
+                    }
+                }
+            }
         }
+
+
         if (isValid) {
             for (int i = 0; i < cardsSelected.length; i++) {
                 if (cardsSelected[i]) {
