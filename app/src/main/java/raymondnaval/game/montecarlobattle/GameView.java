@@ -277,13 +277,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+
+        Log.i(TAG, "onTouchEvent -- event.getAction: " + event.getAction());
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             if ((event.getX() >= ctLayout.getPosition(0).left - (ctLayout.getCardWidthGap() / 2)
                     && event.getX() <= ctLayout.getPosition(0).right) &&
                     event.getY() >= ctLayout.getPosition(0).top - (ctLayout.getCardHeightGap() / 2)
                     && event.getY() <= ctLayout.getPosition(0).bottom + (ctLayout.getCardHeightGap() / 2)) {
                 ctLayout.cardSelected(0);
-
             }
             if ((event.getX() >= ctLayout.getPosition(1).left - (ctLayout.getCardWidthGap() / 2)
                     && event.getX() <= ctLayout.getPosition(1).right + (ctLayout.getCardWidthGap() / 2)) &&
@@ -436,9 +437,17 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 Log.i(TAG, "Clear button");
                 ctLayout.clearSelected();
             }
+
+            Log.i(TAG, "onTouchEvent -- event.getX(): " + event.getX() + " getY: " + event.getY());
+
+        }
+
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            return false;
+        } else {
             return true;
         }
-        return false;
+
 
     }
 

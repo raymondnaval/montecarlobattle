@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -23,6 +24,7 @@ public class CardTableauLayout {
     private Rect[] cardCoordinates;
     private boolean[] cardsSelected, clearedCards;
     private CardDeckMonteCarlo cards;
+    private MatchedClusterOfCards cardsSelectedForMatching;
     private int cardWidthGap, cardHeightGap, numSelected = 0;
     private Context mContext;
 
@@ -42,6 +44,7 @@ public class CardTableauLayout {
         cardCoordinates = new Rect[25];
         setPositions();
         cards = new CardDeckMonteCarlo(mContext, cardCoordinates);
+        cardsSelectedForMatching = new MatchedClusterOfCards(cards);
     }
 
     public void cardSelected(int position) {
@@ -108,95 +111,116 @@ public class CardTableauLayout {
 
     /**
      * Clear selected cards from tableau.
-     * TODO: Check if selection is valid before clearing cards.
      */
     public void clearSelected() {
         Log.i(TAG, "clearSelected -- firstMost: " + firstMost + " lastMost: " + lastMost);
 
         // Check if selection is valid.
         boolean isValid = true;
+        boolean isValidForClusterCheck = false;
         boolean isValidLinearSelection = true;
         boolean horSelection = false;
         boolean verSelection = false;
+        boolean[] cardsChecked = new boolean[25];
 
         // If at least 2 cards are selected, check if they're valid selections.
         if (atLeast2CardsSelected()) {
 
             // Loop from the first selected card to the last selected card.
+//            int i = firstMost;
+//            while (i < lastMost) {
+//
+//                // pos is used to determine if the iteration needs to jump ahead.
+//                int pos = i;
+//
+//                // If card is selected.
+//                if (cardsSelected[i]) {
+//
+//                    // If the card to the right is at or before the last card selected and is
+//                    // selected, increment pos to the position to the right.
+//                    if (i + 1 <= lastMost && !verSelection) {
+//                        if (cardsSelected[i + 1]) {
+//                            pos = i + 1;
+//                            Log.i(TAG, "clearSelected -- i: " + i + " i+1: " + pos);
+//                            horSelection = true;
+//                        }
+//                    }
+//
+//                    // If the card below is at or before the last card selected and is selected,
+//                    // increment pos to the position below.
+//                    if (i + 5 <= lastMost && !horSelection) {
+//                        if (cardsSelected[i + 5]) {
+//                            boolean unselectedBetweenThe5 = true;
+//                            for (int j = i + 1; j < i + 5; j++) {
+//                                Log.i(TAG, "clearSelected -- selected[j]: " + cardsSelected[j] + " j: " + j);
+//                                if (cardsSelected[j]) {
+//                                    unselectedBetweenThe5 = false;
+//                                    break;
+//                                }
+//                            }
+//                            if (unselectedBetweenThe5) {
+//                                pos = i + 5;
+//                            }
+//
+//                            Log.i(TAG, "clearSelected -- i: " + i + " i+5: " + pos);
+//                            verSelection = true;
+//                        }
+//                    }
+//
+//                    // If the pos doesn't shift to the right or below, the selection isn't valid.
+//                    // Else move the iterator to the new pos position.
+//                    if (pos == i) {
+//                        isValidLinearSelection = false;
+//                    } else {
+//                        i = pos;
+//                    }
+//                } else {
+//                    i++;
+//                }
+//
+//                if (!isValidLinearSelection) {
+//                    // break;
+//                }
+//
+//                if (isValidLinearSelection) {
+//                    if (horSelection) {
+//                        for (int j = firstMost; j < lastMost; j++) {
+//                            if (!cards.isLegalMove(j, j + 1)) {
+//                                isValid = false;
+//                                break;
+//                            }
+//                        }
+//                    } else {
+//                        for (int j = firstMost; j < lastMost; j += 5) {
+//                            if (!cards.isLegalMove(j, j + 5)) {
+//                                isValid = false;
+//                                break;
+//                            }
+//                        }
+//                    }
+//                }
+//            }
             int i = firstMost;
             while (i < lastMost) {
-
-                // pos is used to determine if the iteration needs to jump ahead.
-                int pos = i;
-
-                // If card is selected.
-                if (cardsSelected[i]) {
-
-                    // If the card to the right is at or before the last card selected and is
-                    // selected, increment pos to the position to the right.
-                    if (i + 1 <= lastMost && !verSelection) {
-                        if (cardsSelected[i + 1]) {
-                            pos = i + 1;
-                            Log.i(TAG, "clearSelected -- i: " + i + " i+1: " + pos);
-                            horSelection = true;
-                        }
+                if (i % 5 != 4) {
+                    if (cards.isLegalMove(i, i + 1)) {
+                        isValidForClusterCheck = true;
                     }
-
-                    // If the card below is at or before the last card selected and is selected,
-                    // increment pos to the position below.
-                    if (i + 5 <= lastMost && !horSelection) {
-                        if (cardsSelected[i + 5]) {
-                            boolean unselectedBetweenThe5 = true;
-                            for (int j = i + 1; j < i + 5; j++) {
-                                Log.i(TAG, "clearSelected -- selected[j]: " + cardsSelected[j] + " j: " + j);
-                                if (cardsSelected[j]) {
-                                    unselectedBetweenThe5 = false;
-                                    break;
-                                }
-                            }
-                            if (unselectedBetweenThe5) {
-                                pos = i + 5;
-                            }
-
-                            Log.i(TAG, "clearSelected -- i: " + i + " i+5: " + pos);
-                            verSelection = true;
-                        }
-                    }
-
-                    // If the pos doesn't shift to the right or below, the selection isn't valid.
-                    // Else move the iterator to the new pos position.
-                    if (pos == i) {
-                        isValidLinearSelection = false;
-                    } else {
-                        i = pos;
-                    }
-                } else {
-                    i++;
                 }
-                if (!isValidLinearSelection) {
+                if (i < 20) {
+                    if (cards.isLegalMove(i, i + 5)) {
+                        isValidForClusterCheck = true;
+                    }
+                }
+                if (isValidForClusterCheck) {
+                    // Do cluster check.
+                    i++;
+                } else {
+                    isValid = false;
                     break;
                 }
             }
-
-            if (isValidLinearSelection) {
-                if (horSelection) {
-                    for (int j = firstMost; j < lastMost; j++) {
-                        if (!cards.isLegalMove(j, j + 1)) {
-                            isValid = false;
-                            break;
-                        }
-                    }
-                } else {
-                    for (int j = firstMost; j < lastMost; j += 5) {
-                        if (!cards.isLegalMove(j, j + 5)) {
-                            isValid = false;
-                            break;
-                        }
-                    }
-                }
-            }
         }
-
 
         if (isValid) {
             for (int i = 0; i < cardsSelected.length; i++) {
@@ -210,6 +234,30 @@ public class CardTableauLayout {
             clearSelection();
         }
     }
+
+    // TODO: Track touched cards. If touched in a linear line, they are matched cluster. If the 2nd
+    //  touched card isn't lined up with the first card, it becomes the first card (original first
+    //  card is deselected). A new cluster will have a different colored outline. Figure out how to
+    //  track when a new cluster has started. Write it out first!
+    private class MatchedClusterOfCards {
+        private ArrayList<Integer> firstSetOfMatches, secondSetOfMatches;
+        private int numCardsSelected;
+        private CardDeckMonteCarlo cdmc;
+
+        public MatchedClusterOfCards(CardDeckMonteCarlo cdmc) {
+            this.cdmc = cdmc;
+            firstSetOfMatches = new ArrayList<>();
+            numCardsSelected = 0;
+        }
+
+        public void add(int position) {
+            numCardsSelected = numSelected;
+            if (numCardsSelected == 1) {
+
+            }
+        }
+    }
+
 
     // If no cards are selected, reset to default values and clear all selected cards.
     private void resetFirstAndLast() {

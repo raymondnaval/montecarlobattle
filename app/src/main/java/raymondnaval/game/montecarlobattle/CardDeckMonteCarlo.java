@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -69,6 +70,12 @@ public class CardDeckMonteCarlo extends CardDeck {
 
     public void setCardPosition(Rect[] cardPositions) {
 
+    }
+
+    // TODO: Create arraylist of all the matching cards.
+    public ArrayList<Integer> allSameCardsIDs(int cardId) {
+        ArrayList<Integer> allMatches = new ArrayList<>();
+        return allMatches;
     }
 
     public boolean isLegalMove(int cardTouched, int adjCard) {
