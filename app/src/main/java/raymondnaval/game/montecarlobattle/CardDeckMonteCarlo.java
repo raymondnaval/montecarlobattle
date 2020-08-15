@@ -58,12 +58,12 @@ public class CardDeckMonteCarlo extends CardDeck {
                 }
             }
         }
-        for(int i=0; i<54; i++) {
+        for (int i = 0; i < 54; i++) {
             deck.add(new Card(mContext, hash.get(i)));
             Log.i("CardDeckMonteCarlo", "shuffle -- value: " + hash.get(i) + " position: " + i);
         }
 
-        for(int i=0; i<25; i++) {
+        for (int i = 0; i < 25; i++) {
             deck.get(i).setCardPosition(cardPositions[i]);
         }
     }
@@ -72,18 +72,12 @@ public class CardDeckMonteCarlo extends CardDeck {
 
     }
 
-    // TODO: Create arraylist of all the matching cards.
-    public ArrayList<Integer> allSameCardsIDs(int cardId) {
-        ArrayList<Integer> allMatches = new ArrayList<>();
-        return allMatches;
-    }
-
     public boolean isLegalMove(int cardTouched, int adjCard) {
         boolean isLegal = false;
-        if(deck.get(cardTouched).getCardID() == 65 || deck.get(adjCard).getCardID() == 65) {
+        if (deck.get(cardTouched).getCardID() == 65 || deck.get(adjCard).getCardID() == 65) {
             isLegal = true;
         }
-        if(deck.get(cardTouched).getCardID() % 13 == deck.get(adjCard).getCardID() % 13) {
+        if (deck.get(cardTouched).getCardID() % 13 == deck.get(adjCard).getCardID() % 13) {
             isLegal = true;
         }
         return isLegal;
@@ -96,10 +90,10 @@ public class CardDeckMonteCarlo extends CardDeck {
 
     @Override
     public void drawCards(Canvas canvas) {
-        for(int i=0; i<25; i++) {
+        for (int i = 0; i < 25; i++) {
 
             // Draw only the cards that are unselected.
-            if(!updateCardsSelected[i]) {
+            if (!updateCardsSelected[i]) {
                 deck.get(i).draw(canvas);
             }
         }
