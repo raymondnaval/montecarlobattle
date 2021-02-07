@@ -9,6 +9,7 @@ import android.util.Log;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -27,7 +28,7 @@ public class CardDeckMonteCarlo extends CardDeck {
     private Rect[] cardPositions;
     private ArrayList<Card> deck;
     private boolean clearSelected = false, refreshTableau = true;
-    private boolean[] updateCardsSelected = new boolean[25];
+    private boolean[] updateCardsSelected;
 
     public CardDeckMonteCarlo(Context context, Rect[] cardPositions) {
         super(context, false, false, false, 1, -1);
@@ -37,9 +38,7 @@ public class CardDeckMonteCarlo extends CardDeck {
 
         // Initialize all cards as unselected.
         updateCardsSelected = new boolean[25];
-        for (int i = 0; i < updateCardsSelected.length; i++) {
-            updateCardsSelected[i] = false;
-        }
+        Arrays.fill(updateCardsSelected, false);
 
         shuffle();
     }
@@ -59,8 +58,19 @@ public class CardDeckMonteCarlo extends CardDeck {
             }
         }
         for (int i = 0; i < 54; i++) {
-            deck.add(new Card(mContext, hash.get(i)));
-            Log.i("CardDeckMonteCarlo", "shuffle -- value: " + hash.get(i) + " position: " + i);
+//            deck.add(new Card(mContext, hash.get(i)));
+//            Log.i("CardDeckMonteCarlo", "shuffle -- value: " + deck.get(i) + " position: " + i);
+
+            // For testing.
+            if (i % 13 == 0 && i < 4) {
+                deck.add(new Card(mContext, i));
+            }
+            else if (i % 13 == 1 && i >= 4 && i < 8) {
+                deck.add(new Card(mContext, i));
+            } else {
+                deck.add(new Card(mContext, i));
+            }
+
         }
 
         for (int i = 0; i < 25; i++) {
@@ -72,6 +82,7 @@ public class CardDeckMonteCarlo extends CardDeck {
 
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isLegalMove(int cardTouched, int adjCard) {
         boolean isLegal = false;
         if (deck.get(cardTouched).getCardID() == 65 || deck.get(adjCard).getCardID() == 65) {
@@ -86,6 +97,30 @@ public class CardDeckMonteCarlo extends CardDeck {
     public void setUpdateCardsSelected(boolean[] isCardsSelected) {
         updateCardsSelected = isCardsSelected;
         clearSelected = true;
+    }
+
+    // TODO: Update tableau.
+    public void updateCardPositions() {
+
+        int iter = 0;
+        int lastCard = 24;
+        int numberOfClearedCards = 0;
+        for (int i = 0; i < updateCardsSelected.length; i++) {
+            if (updateCardsSelected[i]) {
+                numberOfClearedCards++;
+            }
+            deck.set(i, deck.get(i + numberOfClearedCards));
+            deck.get(i).setCardPosition(cardPositions[i]);
+        }
+
+        for (int i = 0; i < deck.size(); i++) {
+            Log.i("CardDeckMonteCarlo", "updateCardPositions -- value: " + deck.get(i) + " position: " + i);
+        }
+        Arrays.fill(updateCardsSelected, false);
+//        while(lastCard > lastCard-numberOfClearedCards) {
+//
+//            numberOfClearedCards--;
+//        }
     }
 
     @Override
