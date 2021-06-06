@@ -27,8 +27,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private int verticalCenter, horizontalCenter, actionHUDHeight,
             tableauFieldHeight, cardHeightGap, cardWidthGap;
     private Paint topPlayerHUDPaint, bottomPlayerHUDPaint, actionHUDPaint, tableauSpacePaint,
-            clearButtonPaint, clearButtonTextP, refreshButtonPaint;
-    private Rect clearButton, refreshButton, clearText;
+            clearButtonPaint, clearButtonTextP, refreshButtonPaint, collapseButtonPaint;
+    private Rect clearButton, refreshButton, clearText, collapseButton;
     private CardTableauLayout ctLayout;
     private boolean repeatClearButtonPress;
     private final int PAUSE_LENGTH = 25;
@@ -235,10 +235,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         clearButtonTextP.setColor(Color.BLACK);
         clearButtonTextP.setTextSize(42f);
         clearButtonTextP.setTypeface(Typeface.DEFAULT_BOLD);
-
-        clearTextY = GameConstants.SCREEN_HEIGHT - ((GameConstants.SCREEN_HEIGHT) - ((GameConstants
-                .PLAYER_HUD_SIZE * 2) + tableauFieldHeight + 1));
         clearText = new Rect();
+
+        // Collapse button on action HUD (change locations when functioning.)
+        collapseButtonPaint = new Paint();
+        collapseButtonPaint.setColor(Color.CYAN);
+        collapseButtonPaint.setStyle(Paint.Style.FILL);
 
         // Refresh button on action HUD.
         refreshButtonPaint = new Paint();
@@ -252,6 +254,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         refreshButton = new Rect((GameConstants.SCREEN_WIDTH * 2 / 7) + 1, (GameConstants
                 .PLAYER_HUD_SIZE * 2) + tableauFieldHeight + 1, (GameConstants
                 .SCREEN_WIDTH * 5 / 7) - 1, GameConstants.SCREEN_HEIGHT - 1);
+
+        collapseButton = new Rect(GameConstants
+                .SCREEN_WIDTH * 5 / 7, (GameConstants.PLAYER_HUD_SIZE * 2) + tableauFieldHeight + 1,
+                GameConstants.SCREEN_WIDTH - 1, GameConstants.SCREEN_HEIGHT - 1);
     }
 
     @Override
@@ -275,12 +281,18 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         // Clear cards button.
         canvas.drawRect(clearButton, clearButtonPaint);
 
+        // Condense cards button.
+        canvas.drawRect(collapseButton, collapseButtonPaint);
+
         // Refresh cards button.
         canvas.drawRect(refreshButton, refreshButtonPaint);
 
         // Clear cards text.
+        // TODO: Center Clear text in button.
         canvas.getClipBounds(clearText);
         clearButtonTextP.getTextBounds("Clear", 0, 5, clearText);
+        clearTextY = GameConstants.SCREEN_HEIGHT - ((GameConstants.SCREEN_HEIGHT) - ((GameConstants
+                .PLAYER_HUD_SIZE * 2) + tableauFieldHeight + clearText.height() + 1));
         if (repeatClearButtonPress) {
             canvas.drawText("Clear", 2, clearTextY, clearButtonTextP);
         } else {
@@ -292,11 +304,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         ctLayout.drawSelectedCards(canvas);
 
         pauseTimer++;
-        if (pauseTimer >= PAUSE_LENGTH) {
-            repeatClearButtonPress = true;
-        } else {
-            repeatClearButtonPress = false;
-        }
+        repeatClearButtonPress = pauseTimer >= PAUSE_LENGTH;
     }
 
     @Override
@@ -305,148 +313,148 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         if (repeatClearButtonPress) {
 
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                if ((event.getX() >= ctLayout.getPosition(0).left - (ctLayout.getCardWidthGap() / 2)
+                if ((event.getX() >= ctLayout.getPosition(0).left - (ctLayout.getCardWidthGap() / 2f)
                         && event.getX() <= ctLayout.getPosition(0).right) &&
-                        event.getY() >= ctLayout.getPosition(0).top - (ctLayout.getCardHeightGap() / 2)
-                        && event.getY() <= ctLayout.getPosition(0).bottom + (ctLayout.getCardHeightGap() / 2)) {
+                        event.getY() >= ctLayout.getPosition(0).top - (ctLayout.getCardHeightGap() / 2f)
+                        && event.getY() <= ctLayout.getPosition(0).bottom + (ctLayout.getCardHeightGap() / 2f)) {
                     ctLayout.cardSelected(0);
                 }
-                if ((event.getX() >= ctLayout.getPosition(1).left - (ctLayout.getCardWidthGap() / 2)
-                        && event.getX() <= ctLayout.getPosition(1).right + (ctLayout.getCardWidthGap() / 2)) &&
-                        event.getY() >= ctLayout.getPosition(1).top - (ctLayout.getCardHeightGap() / 2)
-                        && event.getY() <= ctLayout.getPosition(1).bottom + (ctLayout.getCardHeightGap() / 2)) {
+                if ((event.getX() >= ctLayout.getPosition(1).left - (ctLayout.getCardWidthGap() / 2f)
+                        && event.getX() <= ctLayout.getPosition(1).right + (ctLayout.getCardWidthGap() / 2f)) &&
+                        event.getY() >= ctLayout.getPosition(1).top - (ctLayout.getCardHeightGap() / 2f)
+                        && event.getY() <= ctLayout.getPosition(1).bottom + (ctLayout.getCardHeightGap() / 2f)) {
                     ctLayout.cardSelected(1);
                 }
-                if ((event.getX() >= ctLayout.getPosition(2).left - (ctLayout.getCardWidthGap() / 2)
-                        && event.getX() <= ctLayout.getPosition(2).right + (ctLayout.getCardWidthGap() / 2)) &&
-                        event.getY() >= ctLayout.getPosition(2).top - (ctLayout.getCardHeightGap() / 2)
-                        && event.getY() <= ctLayout.getPosition(2).bottom + (ctLayout.getCardHeightGap() / 2)) {
+                if ((event.getX() >= ctLayout.getPosition(2).left - (ctLayout.getCardWidthGap() / 2f)
+                        && event.getX() <= ctLayout.getPosition(2).right + (ctLayout.getCardWidthGap() / 2f)) &&
+                        event.getY() >= ctLayout.getPosition(2).top - (ctLayout.getCardHeightGap() / 2f)
+                        && event.getY() <= ctLayout.getPosition(2).bottom + (ctLayout.getCardHeightGap() / 2f)) {
                     ctLayout.cardSelected(2);
                 }
-                if ((event.getX() >= ctLayout.getPosition(3).left - (ctLayout.getCardWidthGap() / 2)
-                        && event.getX() <= ctLayout.getPosition(3).right + (ctLayout.getCardWidthGap() / 2)) &&
-                        event.getY() >= ctLayout.getPosition(3).top - (ctLayout.getCardHeightGap() / 2)
-                        && event.getY() <= ctLayout.getPosition(3).bottom + (ctLayout.getCardHeightGap() / 2)) {
+                if ((event.getX() >= ctLayout.getPosition(3).left - (ctLayout.getCardWidthGap() / 2f)
+                        && event.getX() <= ctLayout.getPosition(3).right + (ctLayout.getCardWidthGap() / 2f)) &&
+                        event.getY() >= ctLayout.getPosition(3).top - (ctLayout.getCardHeightGap() / 2f)
+                        && event.getY() <= ctLayout.getPosition(3).bottom + (ctLayout.getCardHeightGap() / 2f)) {
                     ctLayout.cardSelected(3);
                 }
-                if ((event.getX() >= ctLayout.getPosition(4).left - (ctLayout.getCardWidthGap() / 2)
-                        && event.getX() <= ctLayout.getPosition(4).right + (ctLayout.getCardWidthGap() / 2)) &&
-                        event.getY() >= ctLayout.getPosition(4).top - (ctLayout.getCardHeightGap() / 2)
-                        && event.getY() <= ctLayout.getPosition(4).bottom + (ctLayout.getCardHeightGap() / 2)) {
+                if ((event.getX() >= ctLayout.getPosition(4).left - (ctLayout.getCardWidthGap() / 2f)
+                        && event.getX() <= ctLayout.getPosition(4).right + (ctLayout.getCardWidthGap() / 2f)) &&
+                        event.getY() >= ctLayout.getPosition(4).top - (ctLayout.getCardHeightGap() / 2f)
+                        && event.getY() <= ctLayout.getPosition(4).bottom + (ctLayout.getCardHeightGap() / 2f)) {
                     ctLayout.cardSelected(4);
                 }
-                if ((event.getX() >= ctLayout.getPosition(5).left - (ctLayout.getCardWidthGap() / 2)
-                        && event.getX() <= ctLayout.getPosition(5).right + (ctLayout.getCardWidthGap() / 2)) &&
-                        event.getY() >= ctLayout.getPosition(5).top - (ctLayout.getCardHeightGap() / 2)
-                        && event.getY() <= ctLayout.getPosition(5).bottom + (ctLayout.getCardHeightGap() / 2)) {
+                if ((event.getX() >= ctLayout.getPosition(5).left - (ctLayout.getCardWidthGap() / 2f)
+                        && event.getX() <= ctLayout.getPosition(5).right + (ctLayout.getCardWidthGap() / 2f)) &&
+                        event.getY() >= ctLayout.getPosition(5).top - (ctLayout.getCardHeightGap() / 2f)
+                        && event.getY() <= ctLayout.getPosition(5).bottom + (ctLayout.getCardHeightGap() / 2f)) {
                     ctLayout.cardSelected(5);
                 }
-                if ((event.getX() >= ctLayout.getPosition(6).left - (ctLayout.getCardWidthGap() / 2)
-                        && event.getX() <= ctLayout.getPosition(6).right + (ctLayout.getCardWidthGap() / 2)) &&
-                        event.getY() >= ctLayout.getPosition(6).top - (ctLayout.getCardHeightGap() / 2)
-                        && event.getY() <= ctLayout.getPosition(6).bottom + (ctLayout.getCardHeightGap() / 2)) {
+                if ((event.getX() >= ctLayout.getPosition(6).left - (ctLayout.getCardWidthGap() / 2f)
+                        && event.getX() <= ctLayout.getPosition(6).right + (ctLayout.getCardWidthGap() / 2f)) &&
+                        event.getY() >= ctLayout.getPosition(6).top - (ctLayout.getCardHeightGap() / 2f)
+                        && event.getY() <= ctLayout.getPosition(6).bottom + (ctLayout.getCardHeightGap() / 2f)) {
                     ctLayout.cardSelected(6);
                 }
-                if ((event.getX() >= ctLayout.getPosition(7).left - (ctLayout.getCardWidthGap() / 2)
-                        && event.getX() <= ctLayout.getPosition(7).right + (ctLayout.getCardWidthGap() / 2)) &&
-                        event.getY() >= ctLayout.getPosition(7).top - (ctLayout.getCardHeightGap() / 2)
-                        && event.getY() <= ctLayout.getPosition(7).bottom + (ctLayout.getCardHeightGap() / 2)) {
+                if ((event.getX() >= ctLayout.getPosition(7).left - (ctLayout.getCardWidthGap() / 2f)
+                        && event.getX() <= ctLayout.getPosition(7).right + (ctLayout.getCardWidthGap() / 2f)) &&
+                        event.getY() >= ctLayout.getPosition(7).top - (ctLayout.getCardHeightGap() / 2f)
+                        && event.getY() <= ctLayout.getPosition(7).bottom + (ctLayout.getCardHeightGap() / 2f)) {
                     ctLayout.cardSelected(7);
                 }
-                if ((event.getX() >= ctLayout.getPosition(8).left - (ctLayout.getCardWidthGap() / 2)
-                        && event.getX() <= ctLayout.getPosition(8).right + (ctLayout.getCardWidthGap() / 2)) &&
-                        event.getY() >= ctLayout.getPosition(8).top - (ctLayout.getCardHeightGap() / 2)
-                        && event.getY() <= ctLayout.getPosition(8).bottom + (ctLayout.getCardHeightGap() / 2)) {
+                if ((event.getX() >= ctLayout.getPosition(8).left - (ctLayout.getCardWidthGap() / 2f)
+                        && event.getX() <= ctLayout.getPosition(8).right + (ctLayout.getCardWidthGap() / 2f)) &&
+                        event.getY() >= ctLayout.getPosition(8).top - (ctLayout.getCardHeightGap() / 2f)
+                        && event.getY() <= ctLayout.getPosition(8).bottom + (ctLayout.getCardHeightGap() / 2f)) {
                     ctLayout.cardSelected(8);
                 }
-                if ((event.getX() >= ctLayout.getPosition(9).left - (ctLayout.getCardWidthGap() / 2)
-                        && event.getX() <= ctLayout.getPosition(9).right + (ctLayout.getCardWidthGap() / 2)) &&
-                        event.getY() >= ctLayout.getPosition(9).top - (ctLayout.getCardHeightGap() / 2)
-                        && event.getY() <= ctLayout.getPosition(9).bottom + (ctLayout.getCardHeightGap() / 2)) {
+                if ((event.getX() >= ctLayout.getPosition(9).left - (ctLayout.getCardWidthGap() / 2f)
+                        && event.getX() <= ctLayout.getPosition(9).right + (ctLayout.getCardWidthGap() / 2f)) &&
+                        event.getY() >= ctLayout.getPosition(9).top - (ctLayout.getCardHeightGap() / 2f)
+                        && event.getY() <= ctLayout.getPosition(9).bottom + (ctLayout.getCardHeightGap() / 2f)) {
                     ctLayout.cardSelected(9);
                 }
-                if ((event.getX() >= ctLayout.getPosition(10).left - (ctLayout.getCardWidthGap() / 2)
-                        && event.getX() <= ctLayout.getPosition(10).right + (ctLayout.getCardWidthGap() / 2)) &&
-                        event.getY() >= ctLayout.getPosition(10).top - (ctLayout.getCardHeightGap() / 2)
-                        && event.getY() <= ctLayout.getPosition(10).bottom + (ctLayout.getCardHeightGap() / 2)) {
+                if ((event.getX() >= ctLayout.getPosition(10).left - (ctLayout.getCardWidthGap() / 2f)
+                        && event.getX() <= ctLayout.getPosition(10).right + (ctLayout.getCardWidthGap() / 2f)) &&
+                        event.getY() >= ctLayout.getPosition(10).top - (ctLayout.getCardHeightGap() / 2f)
+                        && event.getY() <= ctLayout.getPosition(10).bottom + (ctLayout.getCardHeightGap() / 2f)) {
                     ctLayout.cardSelected(10);
                 }
-                if ((event.getX() >= ctLayout.getPosition(11).left - (ctLayout.getCardWidthGap() / 2)
-                        && event.getX() <= ctLayout.getPosition(11).right + (ctLayout.getCardWidthGap() / 2)) &&
-                        event.getY() >= ctLayout.getPosition(11).top - (ctLayout.getCardHeightGap() / 2)
-                        && event.getY() <= ctLayout.getPosition(11).bottom + (ctLayout.getCardHeightGap() / 2)) {
+                if ((event.getX() >= ctLayout.getPosition(11).left - (ctLayout.getCardWidthGap() / 2f)
+                        && event.getX() <= ctLayout.getPosition(11).right + (ctLayout.getCardWidthGap() / 2f)) &&
+                        event.getY() >= ctLayout.getPosition(11).top - (ctLayout.getCardHeightGap() / 2f)
+                        && event.getY() <= ctLayout.getPosition(11).bottom + (ctLayout.getCardHeightGap() / 2f)) {
                     ctLayout.cardSelected(11);
                 }
-                if ((event.getX() >= ctLayout.getPosition(12).left - (ctLayout.getCardWidthGap() / 2)
-                        && event.getX() <= ctLayout.getPosition(12).right + (ctLayout.getCardWidthGap() / 2)) &&
-                        event.getY() >= ctLayout.getPosition(12).top - (ctLayout.getCardHeightGap() / 2)
-                        && event.getY() <= ctLayout.getPosition(12).bottom + (ctLayout.getCardHeightGap() / 2)) {
+                if ((event.getX() >= ctLayout.getPosition(12).left - (ctLayout.getCardWidthGap() / 2f)
+                        && event.getX() <= ctLayout.getPosition(12).right + (ctLayout.getCardWidthGap() / 2f)) &&
+                        event.getY() >= ctLayout.getPosition(12).top - (ctLayout.getCardHeightGap() / 2f)
+                        && event.getY() <= ctLayout.getPosition(12).bottom + (ctLayout.getCardHeightGap() / 2f)) {
                     ctLayout.cardSelected(12);
                 }
-                if ((event.getX() >= ctLayout.getPosition(13).left - (ctLayout.getCardWidthGap() / 2)
-                        && event.getX() <= ctLayout.getPosition(13).right + (ctLayout.getCardWidthGap() / 2)) &&
-                        event.getY() >= ctLayout.getPosition(13).top - (ctLayout.getCardHeightGap() / 2)
-                        && event.getY() <= ctLayout.getPosition(13).bottom + (ctLayout.getCardHeightGap() / 2)) {
+                if ((event.getX() >= ctLayout.getPosition(13).left - (ctLayout.getCardWidthGap() / 2f)
+                        && event.getX() <= ctLayout.getPosition(13).right + (ctLayout.getCardWidthGap() / 2f)) &&
+                        event.getY() >= ctLayout.getPosition(13).top - (ctLayout.getCardHeightGap() / 2f)
+                        && event.getY() <= ctLayout.getPosition(13).bottom + (ctLayout.getCardHeightGap() / 2f)) {
                     ctLayout.cardSelected(13);
                 }
-                if ((event.getX() >= ctLayout.getPosition(14).left - (ctLayout.getCardWidthGap() / 2)
-                        && event.getX() <= ctLayout.getPosition(14).right + (ctLayout.getCardWidthGap() / 2)) &&
-                        event.getY() >= ctLayout.getPosition(14).top - (ctLayout.getCardHeightGap() / 2)
-                        && event.getY() <= ctLayout.getPosition(14).bottom + (ctLayout.getCardHeightGap() / 2)) {
+                if ((event.getX() >= ctLayout.getPosition(14).left - (ctLayout.getCardWidthGap() / 2f)
+                        && event.getX() <= ctLayout.getPosition(14).right + (ctLayout.getCardWidthGap() / 2f)) &&
+                        event.getY() >= ctLayout.getPosition(14).top - (ctLayout.getCardHeightGap() / 2f)
+                        && event.getY() <= ctLayout.getPosition(14).bottom + (ctLayout.getCardHeightGap() / 2f)) {
                     ctLayout.cardSelected(14);
                 }
-                if ((event.getX() >= ctLayout.getPosition(15).left - (ctLayout.getCardWidthGap() / 2)
-                        && event.getX() <= ctLayout.getPosition(15).right + (ctLayout.getCardWidthGap() / 2)) &&
-                        event.getY() >= ctLayout.getPosition(15).top - (ctLayout.getCardHeightGap() / 2)
-                        && event.getY() <= ctLayout.getPosition(15).bottom + (ctLayout.getCardHeightGap() / 2)) {
+                if ((event.getX() >= ctLayout.getPosition(15).left - (ctLayout.getCardWidthGap() / 2f)
+                        && event.getX() <= ctLayout.getPosition(15).right + (ctLayout.getCardWidthGap() / 2f)) &&
+                        event.getY() >= ctLayout.getPosition(15).top - (ctLayout.getCardHeightGap() / 2f)
+                        && event.getY() <= ctLayout.getPosition(15).bottom + (ctLayout.getCardHeightGap() / 2f)) {
                     ctLayout.cardSelected(15);
                 }
-                if ((event.getX() >= ctLayout.getPosition(16).left - (ctLayout.getCardWidthGap() / 2)
-                        && event.getX() <= ctLayout.getPosition(16).right + (ctLayout.getCardWidthGap() / 2)) &&
-                        event.getY() >= ctLayout.getPosition(16).top - (ctLayout.getCardHeightGap() / 2)
-                        && event.getY() <= ctLayout.getPosition(16).bottom + (ctLayout.getCardHeightGap() / 2)) {
+                if ((event.getX() >= ctLayout.getPosition(16).left - (ctLayout.getCardWidthGap() / 2f)
+                        && event.getX() <= ctLayout.getPosition(16).right + (ctLayout.getCardWidthGap() / 2f)) &&
+                        event.getY() >= ctLayout.getPosition(16).top - (ctLayout.getCardHeightGap() / 2f)
+                        && event.getY() <= ctLayout.getPosition(16).bottom + (ctLayout.getCardHeightGap() / 2f)) {
                     ctLayout.cardSelected(16);
                 }
-                if ((event.getX() >= ctLayout.getPosition(17).left - (ctLayout.getCardWidthGap() / 2)
-                        && event.getX() <= ctLayout.getPosition(17).right + (ctLayout.getCardWidthGap() / 2)) &&
-                        event.getY() >= ctLayout.getPosition(17).top - (ctLayout.getCardHeightGap() / 2)
-                        && event.getY() <= ctLayout.getPosition(17).bottom + (ctLayout.getCardHeightGap() / 2)) {
+                if ((event.getX() >= ctLayout.getPosition(17).left - (ctLayout.getCardWidthGap() / 2f)
+                        && event.getX() <= ctLayout.getPosition(17).right + (ctLayout.getCardWidthGap() / 2f)) &&
+                        event.getY() >= ctLayout.getPosition(17).top - (ctLayout.getCardHeightGap() / 2f)
+                        && event.getY() <= ctLayout.getPosition(17).bottom + (ctLayout.getCardHeightGap() / 2f)) {
                     ctLayout.cardSelected(17);
                 }
-                if ((event.getX() >= ctLayout.getPosition(18).left - (ctLayout.getCardWidthGap() / 2)
-                        && event.getX() <= ctLayout.getPosition(18).right + (ctLayout.getCardWidthGap() / 2)) &&
-                        event.getY() >= ctLayout.getPosition(18).top - (ctLayout.getCardHeightGap() / 2)
-                        && event.getY() <= ctLayout.getPosition(18).bottom + (ctLayout.getCardHeightGap() / 2)) {
+                if ((event.getX() >= ctLayout.getPosition(18).left - (ctLayout.getCardWidthGap() / 2f)
+                        && event.getX() <= ctLayout.getPosition(18).right + (ctLayout.getCardWidthGap() / 2f)) &&
+                        event.getY() >= ctLayout.getPosition(18).top - (ctLayout.getCardHeightGap() / 2f)
+                        && event.getY() <= ctLayout.getPosition(18).bottom + (ctLayout.getCardHeightGap() / 2f)) {
                     ctLayout.cardSelected(18);
                 }
-                if ((event.getX() >= ctLayout.getPosition(19).left - (ctLayout.getCardWidthGap() / 2)
-                        && event.getX() <= ctLayout.getPosition(19).right + (ctLayout.getCardWidthGap() / 2)) &&
-                        event.getY() >= ctLayout.getPosition(19).top - (ctLayout.getCardHeightGap() / 2)
-                        && event.getY() <= ctLayout.getPosition(19).bottom + (ctLayout.getCardHeightGap() / 2)) {
+                if ((event.getX() >= ctLayout.getPosition(19).left - (ctLayout.getCardWidthGap() / 2f)
+                        && event.getX() <= ctLayout.getPosition(19).right + (ctLayout.getCardWidthGap() / 2f)) &&
+                        event.getY() >= ctLayout.getPosition(19).top - (ctLayout.getCardHeightGap() / 2f)
+                        && event.getY() <= ctLayout.getPosition(19).bottom + (ctLayout.getCardHeightGap() / 2f)) {
                     ctLayout.cardSelected(19);
                 }
-                if ((event.getX() >= ctLayout.getPosition(20).left - (ctLayout.getCardWidthGap() / 2)
-                        && event.getX() <= ctLayout.getPosition(20).right + (ctLayout.getCardWidthGap() / 2)) &&
-                        event.getY() >= ctLayout.getPosition(20).top - (ctLayout.getCardHeightGap() / 2)
-                        && event.getY() <= ctLayout.getPosition(20).bottom + (ctLayout.getCardHeightGap() / 2)) {
+                if ((event.getX() >= ctLayout.getPosition(20).left - (ctLayout.getCardWidthGap() / 2f)
+                        && event.getX() <= ctLayout.getPosition(20).right + (ctLayout.getCardWidthGap() / 2f)) &&
+                        event.getY() >= ctLayout.getPosition(20).top - (ctLayout.getCardHeightGap() / 2f)
+                        && event.getY() <= ctLayout.getPosition(20).bottom + (ctLayout.getCardHeightGap() / 2f)) {
                     ctLayout.cardSelected(20);
                 }
-                if ((event.getX() >= ctLayout.getPosition(21).left - (ctLayout.getCardWidthGap() / 2)
-                        && event.getX() <= ctLayout.getPosition(21).right + (ctLayout.getCardWidthGap() / 2)) &&
-                        event.getY() >= ctLayout.getPosition(21).top - (ctLayout.getCardHeightGap() / 2)
-                        && event.getY() <= ctLayout.getPosition(21).bottom + (ctLayout.getCardHeightGap() / 2)) {
+                if ((event.getX() >= ctLayout.getPosition(21).left - (ctLayout.getCardWidthGap() / 2f)
+                        && event.getX() <= ctLayout.getPosition(21).right + (ctLayout.getCardWidthGap() / 2f)) &&
+                        event.getY() >= ctLayout.getPosition(21).top - (ctLayout.getCardHeightGap() / 2f)
+                        && event.getY() <= ctLayout.getPosition(21).bottom + (ctLayout.getCardHeightGap() / 2f)) {
                     ctLayout.cardSelected(21);
                 }
-                if ((event.getX() >= ctLayout.getPosition(22).left - (ctLayout.getCardWidthGap() / 2)
-                        && event.getX() <= ctLayout.getPosition(22).right + (ctLayout.getCardWidthGap() / 2)) &&
-                        event.getY() >= ctLayout.getPosition(22).top - (ctLayout.getCardHeightGap() / 2)
-                        && event.getY() <= ctLayout.getPosition(22).bottom + (ctLayout.getCardHeightGap() / 2)) {
+                if ((event.getX() >= ctLayout.getPosition(22).left - (ctLayout.getCardWidthGap() / 2f)
+                        && event.getX() <= ctLayout.getPosition(22).right + (ctLayout.getCardWidthGap() / 2f)) &&
+                        event.getY() >= ctLayout.getPosition(22).top - (ctLayout.getCardHeightGap() / 2f)
+                        && event.getY() <= ctLayout.getPosition(22).bottom + (ctLayout.getCardHeightGap() / 2f)) {
                     ctLayout.cardSelected(22);
                 }
-                if ((event.getX() >= ctLayout.getPosition(23).left - (ctLayout.getCardWidthGap() / 2)
-                        && event.getX() <= ctLayout.getPosition(23).right + (ctLayout.getCardWidthGap() / 2)) &&
-                        event.getY() >= ctLayout.getPosition(23).top - (ctLayout.getCardHeightGap() / 2)
-                        && event.getY() <= ctLayout.getPosition(23).bottom + (ctLayout.getCardHeightGap() / 2)) {
+                if ((event.getX() >= ctLayout.getPosition(23).left - (ctLayout.getCardWidthGap() / 2f)
+                        && event.getX() <= ctLayout.getPosition(23).right + (ctLayout.getCardWidthGap() / 2f)) &&
+                        event.getY() >= ctLayout.getPosition(23).top - (ctLayout.getCardHeightGap() / 2f)
+                        && event.getY() <= ctLayout.getPosition(23).bottom + (ctLayout.getCardHeightGap() / 2f)) {
                     ctLayout.cardSelected(23);
                 }
                 if ((event.getX() >= ctLayout.getPosition(24).left - ((float) ctLayout.getCardWidthGap() / 2)
@@ -462,6 +470,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
                     pauseTimer = 0;
                     ctLayout.clearSelected();
+                }
+
+                // Collapse cards button.
+                if ((event.getX() >= collapseButton.left && event.getX() <= collapseButton.right)
+                        && event.getY() >= collapseButton.top && event.getY() <= collapseButton.bottom) {
+                    ctLayout.collapseCards();
                 }
                 return true;
             }
