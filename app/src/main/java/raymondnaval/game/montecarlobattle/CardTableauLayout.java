@@ -112,17 +112,16 @@ public class CardTableauLayout {
 
     /**
      * Clear selected cards from tableau.
+     * TODO: Clearing the last card in the tableau is buggy.
      */
     public void clearSelected() {
         Log.i(TAG, "clearSelected -- firstMost: " + firstMost + " lastMost: " + lastMost);
 
         // Check if selection is valid.
         boolean isValid = true;
-        boolean isValidForClusterCheck = false;
         boolean isValidLinearSelection = true;
         boolean horSelection = false;
         boolean verSelection = false;
-        boolean[] cardsChecked = new boolean[25];
 
         // If at least 2 cards are selected, check if they're valid selections.
         if (atLeast2CardsSelected()) {
@@ -179,12 +178,11 @@ public class CardTableauLayout {
                     i++;
                 }
 
+                Log.i(TAG, "clearSelected -- is valid linear selection:" + isValidLinearSelection);
                 if (!isValidLinearSelection) {
                     isValid = false;
                     break;
-                }
-
-                if (isValidLinearSelection) {
+                } else {
                     if (horSelection) {
                         for (int j = firstMost; j < lastMost; j++) {
                             if (!cards.isLegalMove(j, j + 1)) {
@@ -201,7 +199,6 @@ public class CardTableauLayout {
                         }
                     }
                 }
-                Log.i(TAG, "clearSelected -- is valid linear selection:" + isValidLinearSelection);
             }
             Log.i(TAG, "clearSelected -- is valid:" + isValid);
             if (isValid) {
@@ -210,8 +207,8 @@ public class CardTableauLayout {
                         clearedCards[k] = true;
                     }
                 }
-                cards.setUpdateCardsSelected(clearedCards);
-                cards.updateCardPositions();
+                Log.i(TAG, "clearSelected -- numSelected:" + numSelected);
+                cards.updateCardPositions(clearedCards);
 
                 resetFirstAndLast();
             } else {
@@ -254,7 +251,7 @@ public class CardTableauLayout {
     private void clearSelection() {
         for (int i = 0; i < cardsSelected.length; i++) {
             cardsSelected[i] = false;
-            Log.i(TAG, "clearSelection -- i: " + i + " cardsSelected[i]: " + cardsSelected[i]);
+//            Log.i(TAG, "clearSelection -- i: " + i + " cardsSelected[i]: " + cardsSelected[i]);
         }
         numSelected = 0;
     }
