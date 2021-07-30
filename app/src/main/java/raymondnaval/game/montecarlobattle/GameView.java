@@ -26,9 +26,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private DisplayThread thread;
     private int verticalCenter, horizontalCenter, actionHUDHeight,
             tableauFieldHeight, cardHeightGap, cardWidthGap;
-    private Paint topPlayerHUDPaint, bottomPlayerHUDPaint, actionHUDPaint, tableauSpacePaint,
-            clearButtonPaint, clearButtonTextP, refreshButtonPaint, collapseButtonPaint;
-    private Rect clearButton, refreshButton, clearText, collapseButton;
+    private Paint topPlayerHUDPaint, bottomPlayerHUDPaint, actionHUDPaint, clearButtonPaint,
+            clearButtonTextP, refreshButtonPaint, collapseButtonPaint, endTurnButtonTextP;
+    private Rect clearButton, refreshButton, clearText, collapseButton, endTurnText;
     private CardTableauLayout ctLayout;
     private boolean repeatClearButtonPress;
     private final int PAUSE_LENGTH = 25;
@@ -54,121 +54,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         ctLayout = new CardTableauLayout(mContext, GameConstants.PLAYER_HUD_SIZE);
 
-//        // X coordinates for 4- and 6-column tableau.
-//        col1X = (horizontalCenter) - (horzGap / 2) - (horzGap * 2) - (GameConstants.CARD_WIDTH * 3);
-//        col2X = (horizontalCenter) - (horzGap / 2) - (horzGap) - (GameConstants.CARD_WIDTH * 2);
-//        col3X = (horizontalCenter) - (horzGap / 2) - (GameConstants.CARD_WIDTH);
-//        col4X = (horizontalCenter) + (horzGap / 2);
-//        col5X = (horizontalCenter) + (horzGap / 2) + (horzGap) + (GameConstants.CARD_WIDTH);
-//        col6X = (horizontalCenter) + (horzGap / 2) + (horzGap * 2) + (GameConstants.CARD_WIDTH * 2);
-//
-//        // X coordinates for 5-column tableau.
-//        colHardX3 = horizontalCenter - (GameConstants.CARD_WIDTH / 2);
-//        colHardX2 = colHardX3 - GameConstants.CARD_WIDTH - horzGap;
-//        colHardX1 = colHardX2 - GameConstants.CARD_WIDTH - horzGap;
-//        colHardX4 = colHardX3 + GameConstants.CARD_WIDTH + horzGap;
-//        colHardX5 = colHardX4 + GameConstants.CARD_WIDTH + horzGap;
-//
-//        // Y coordinates.
-//        col1Y = (verticalCenter) - GameConstants.CARD_HEIGHT - (vertGap * 7);
-//        col2Y = (verticalCenter) - GameConstants.CARD_HEIGHT - (vertGap * 6);
-//        col3Y = (verticalCenter) - GameConstants.CARD_HEIGHT - (vertGap * 5);
-//        col4Y = (verticalCenter) - GameConstants.CARD_HEIGHT - (vertGap * 4);
-//        col5Y = (verticalCenter) - GameConstants.CARD_HEIGHT - (vertGap * 3);
-//        col6Y = (verticalCenter) - GameConstants.CARD_HEIGHT - (vertGap * 2);
-//        col7Y = (verticalCenter) - GameConstants.CARD_HEIGHT - (vertGap);
-//        col8Y = (verticalCenter) - GameConstants.CARD_HEIGHT;
-//        col9Y = (verticalCenter) - GameConstants.CARD_HEIGHT + (vertGap);
-//
-//        // Position the Stack pile.
-//        int stackX = col3X;
-//        int stackY = verticalCenter + (verticalCenter / 4);
-//        stackPos = new Rect(stackX, stackY, stackX + GameConstants.CARD_WIDTH, stackY
-//                + GameConstants.CARD_HEIGHT);
-//
-//        // If Peeker Booster is used, position the top stack card. Else position the last card in
-//        // the deck (back of the deck card).
-//        if (isPeeker) {
-//            cardDeck.setCardPosition(cardDeck.getTopStackCard(), stackPos);
-////            DebugMethods.debugLog("GameView", "positionCards",
-////                    "top stack card: " + cardDeck.getTopStackCard()
-////                            + " stackPos: " + stackPos);
-//        } else {
-//            cardDeck.setCardPosition(cardDeck.getDeckSize() - 1, stackPos);
-//        }
-//
-//        // Position the Foundation pile.
-//        foundationX = col4X;
-//        foundationY = verticalCenter + (verticalCenter / 4);
-//        switch (difficulty) {
-//            case 0:
-//                cardDeck.addToFoundation(GameConstants.EASY_TABLEAU);
-//                cardDeck.setCardPosition(GameConstants.EASY_TABLEAU, new Rect(foundationX, foundationY, foundationX + GameConstants.CARD_WIDTH, foundationY + GameConstants.CARD_HEIGHT));
-//
-//                colPos1 = cardDeck.getCardPosition(3);
-//                colPos2 = cardDeck.getCardPosition(7);
-//                colPos3 = cardDeck.getCardPosition(11);
-//                colPos4 = cardDeck.getCardPosition(15);
-//                colPos5 = cardDeck.getCardPosition(19);
-//                colPos6 = cardDeck.getCardPosition(23);
-//                break;
-//            case 2:
-//                cardDeck.addToFoundation(GameConstants.HARD_TABLEAU);
-//                cardDeck.setCardPosition(GameConstants.HARD_TABLEAU, new Rect(foundationX, foundationY, foundationX + GameConstants.CARD_WIDTH, foundationY + GameConstants.CARD_HEIGHT));
-//
-//                colPos1 = cardDeck.getCardPosition(6);
-//                colPos2 = cardDeck.getCardPosition(13);
-//                colPos3 = cardDeck.getCardPosition(20);
-//                colPos4 = cardDeck.getCardPosition(27);
-//                colPos5 = cardDeck.getCardPosition(34);
-//                break;
-//            case 3:
-//                cardDeck.addToFoundation(GameConstants.HARDER_TABLEAU);
-//                cardDeck.setCardPosition(GameConstants.HARDER_TABLEAU, new Rect(foundationX, foundationY, foundationX + GameConstants.CARD_WIDTH, foundationY + GameConstants.CARD_HEIGHT));
-//
-//                colPos1 = cardDeck.getCardPosition(8);
-//                colPos2 = cardDeck.getCardPosition(17);
-//                colPos3 = cardDeck.getCardPosition(26);
-//                colPos4 = cardDeck.getCardPosition(35);
-//                break;
-//            default:
-//                cardDeck.addToFoundation(GameConstants.MEDIUM_TABLEAU);
-//                cardDeck.setCardPosition(GameConstants.MEDIUM_TABLEAU, new Rect(foundationX, foundationY, foundationX + GameConstants.CARD_WIDTH, foundationY + GameConstants.CARD_HEIGHT));
-//
-//                // Set touch region for each column.
-//                colPos1 = cardDeck.getCardPosition(3);
-//                colPos2 = cardDeck.getCardPosition(8);
-//                colPos3 = cardDeck.getCardPosition(13);
-//                colPos4 = cardDeck.getCardPosition(18);
-//                colPos5 = cardDeck.getCardPosition(23);
-//                colPos6 = cardDeck.getCardPosition(27);
-//                break;
-//        }
-//
-//        // Set touch region for stack pile.
-//        // If peeker booster is used, reference the top stack card's position. Else reference the
-//        // back of the card.
-////        if (isPeeker) {
-////            stackPile = cardDeck.getCardPosition(cardDeck.getTopStackCard());
-////            DebugMethods.debugLog("GameView", "positionCards",
-////                    "top stack card: " + cardDeck.getTopStackCard()
-////                            + " stackPile: " + stackPile);
-////        } else {
-////            stackPile = cardDeck.getCardPosition(cardDeck.getDeckSize() - 1);
-////        }
-//
-//        // Active cards for each column.
-//        col1ActiveCard = cardDeck.initialActiveColumnCards()[0];
-//        col2ActiveCard = cardDeck.initialActiveColumnCards()[1];
-//        col3ActiveCard = cardDeck.initialActiveColumnCards()[2];
-//        col4ActiveCard = cardDeck.initialActiveColumnCards()[3];
-//        if (difficulty < 3) {
-//            col5ActiveCard = cardDeck.initialActiveColumnCards()[4];
-//            if (difficulty < 2) {
-//                col6ActiveCard = cardDeck.initialActiveColumnCards()[5];
-//            }
-//        }
-//
 //        // Token image.
 //        int tokenLocationX = col5X + (GameConstants.CARD_WIDTH / 2);
 //        token = ContextCompat.getDrawable(mContext, R.drawable.token);
@@ -242,6 +127,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         collapseButtonPaint.setColor(Color.CYAN);
         collapseButtonPaint.setStyle(Paint.Style.FILL);
 
+        // End turn text.
+        endTurnButtonTextP = new Paint();
+        endTurnButtonTextP.setColor(Color.BLACK);
+        endTurnButtonTextP.setTextSize(42f);
+        endTurnButtonTextP.setTypeface(Typeface.DEFAULT_BOLD);
+        endTurnText = new Rect();
+
         // Refresh button on action HUD.
         refreshButtonPaint = new Paint();
         refreshButtonPaint.setColor(Color.YELLOW);
@@ -300,6 +192,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         // Refresh tableau text.
+        endTurnButtonTextP.getTextBounds("End Turn", 0, 8, endTurnText);
+        canvas.drawText("End Turn", GameConstants.SCREEN_WIDTH * 5 / 7, clearTextY,
+                endTurnButtonTextP);
 
         ctLayout.drawSelectedCards(canvas);
 
@@ -472,10 +367,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     ctLayout.clearSelected();
                 }
 
-                // Collapse cards button.
+                // End turn button.
                 if ((event.getX() >= collapseButton.left && event.getX() <= collapseButton.right)
                         && event.getY() >= collapseButton.top && event.getY() <= collapseButton.bottom) {
-                    ctLayout.collapseCards();
+                    ctLayout.refreshTableau();
                 }
                 return true;
             }

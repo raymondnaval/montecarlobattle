@@ -152,7 +152,7 @@ public class CardDeck {
             // For cheating and testing. :D
 //                deck.add(new Card(mContext, i));
 
-            Log.i(TAG, "shuffle -- value: " + hash.get(i) + " position: " + i);
+//            Log.i(TAG, "shuffle -- value: " + hash.get(i) + " position: " + i);
         }
 
         // Represents the back of the card. Do not add if peeker booster card is used.
