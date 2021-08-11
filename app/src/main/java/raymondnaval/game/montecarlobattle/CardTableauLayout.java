@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -112,7 +113,6 @@ public class CardTableauLayout {
 
     /**
      * Clear selected cards from tableau.
-     * TODO: Clearing the last card in the tableau is buggy.
      */
     public void clearSelected() {
         Log.i(TAG, "clearSelected -- firstMost: " + firstMost + " lastMost: " + lastMost);
@@ -205,6 +205,7 @@ public class CardTableauLayout {
                 for (int k = 0; k < cardsSelected.length; k++) {
                     if (cardsSelected[k]) {
                         clearedCards[k] = true;
+                        Log.i(TAG, "clearSelected -- cleared cards count:" + k);
                     }
                 }
                 Log.i(TAG, "clearSelected -- numSelected:" + numSelected);
@@ -249,10 +250,7 @@ public class CardTableauLayout {
 
     // Clear all selected cards.
     private void clearSelection() {
-        for (int i = 0; i < cardsSelected.length; i++) {
-            cardsSelected[i] = false;
-//            Log.i(TAG, "clearSelection -- i: " + i + " cardsSelected[i]: " + cardsSelected[i]);
-        }
+        Arrays.fill(cardsSelected, false);
         numSelected = 0;
     }
 
@@ -262,10 +260,10 @@ public class CardTableauLayout {
 
             // If card is selected but not cleared yet, draw the selection outline.
             if (cardsSelected[i] && !clearedCards[i]) {
-                canvas.drawRect(cardCoordinates[i].left - (cardWidthGap / 4),
-                        cardCoordinates[i].top - (cardHeightGap / 4),
-                        cardCoordinates[i].right + (cardWidthGap / 4),
-                        cardCoordinates[i].bottom + (cardHeightGap / 4),
+                canvas.drawRect(cardCoordinates[i].left - (cardWidthGap / 4f),
+                        cardCoordinates[i].top - (cardHeightGap / 4f),
+                        cardCoordinates[i].right + (cardWidthGap / 4f),
+                        cardCoordinates[i].bottom + (cardHeightGap / 4f),
                         outlineP);
             }
         }

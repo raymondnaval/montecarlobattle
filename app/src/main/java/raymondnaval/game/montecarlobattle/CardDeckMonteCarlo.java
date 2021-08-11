@@ -105,18 +105,18 @@ public class CardDeckMonteCarlo extends CardDeck {
 
     public void updateCardPositions(boolean[] isCardsSelected) {
 
-        Log.i("CardDeckMonteCarlo", "updateCardPositions -- init deck size: " + deck.size());
-
         updateCardsSelected = isCardsSelected;
         clearSelected = true;
 
         // Cards that were cleared from the tableau are changed to a value of -1 in the deck. Keep
         // track of the number of cards that are set to -1.
-        for (int i = 0; i <= updateCardsSelected.length - discardedDeck.size(); i++) {
+        int initialDiscardedDeckSize = discardedDeck.size();
+        for (int i = 0; i < updateCardsSelected.length - initialDiscardedDeckSize; i++) {
             if (updateCardsSelected[i]) {
                 discardedDeck.add(deck.get(i));
                 deck.set(i, new Card(mContext, -1));
             }
+
         }
 
         Log.i("CardDeckMonteCarlo", "updateCardPositions -- updateCardsSelected.length - discardedDeck.size(): "
