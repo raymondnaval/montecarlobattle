@@ -18,9 +18,6 @@ import java.util.Random;
  */
 
 public class CardDeckMonteCarlo extends CardDeck {
-    /**
-     *
-     */
 
     private final String TAG = "CardDeckMonteCarlo";
     private Drawable cardTest;
@@ -103,7 +100,7 @@ public class CardDeckMonteCarlo extends CardDeck {
         Arrays.fill(updateCardsSelected, false);
     }
 
-    public void updateCardPositions(boolean[] isCardsSelected) {
+    public void updateCardPositions(boolean[] isCardsSelected, int numCardsCleared) {
 
         updateCardsSelected = isCardsSelected;
         clearSelected = true;
@@ -116,7 +113,6 @@ public class CardDeckMonteCarlo extends CardDeck {
                 discardedDeck.add(deck.get(i));
                 deck.set(i, new Card(mContext, -1));
             }
-
         }
 
         Log.i("CardDeckMonteCarlo", "updateCardPositions -- updateCardsSelected.length - discardedDeck.size(): "

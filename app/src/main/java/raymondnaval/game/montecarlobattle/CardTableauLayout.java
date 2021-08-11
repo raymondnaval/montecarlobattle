@@ -32,6 +32,7 @@ public class CardTableauLayout {
 
     private Paint outlineP;
 
+    // TODO: Refresh tableau after turn ends.
     public CardTableauLayout(Context context, int topTableauBorder) {
         mContext = context;
         this.topTableauBorder = topTableauBorder;
@@ -209,7 +210,7 @@ public class CardTableauLayout {
                     }
                 }
                 Log.i(TAG, "clearSelected -- numSelected:" + numSelected);
-                cards.updateCardPositions(clearedCards);
+                cards.updateCardPositions(clearedCards, numSelected);
 
                 resetFirstAndLast();
             } else {
