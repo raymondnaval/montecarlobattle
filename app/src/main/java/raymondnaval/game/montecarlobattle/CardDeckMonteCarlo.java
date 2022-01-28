@@ -136,7 +136,7 @@ public class CardDeckMonteCarlo extends CardDeck {
         Log.i("CardDeckMonteCarlo", "updateCardPositions -- discardedDeck.size: " + discardedDeck.size());
         Log.i("CardDeckMonteCarlo", "updateCardPositions -- deck size: " + deck.size());
 
-        for (int i = 0; i < 25; i++) {
+        for (int i = 0; i < 25 && i < deck.size(); i++) {
             deck.get(i).setCardPosition(cardPositions[i]);
 
             // The cards cleared won't be drawn.

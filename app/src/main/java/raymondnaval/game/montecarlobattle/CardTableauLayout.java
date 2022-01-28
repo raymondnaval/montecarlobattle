@@ -15,6 +15,7 @@ import java.util.HashMap;
  * This class will be used to track the position of each card in the 5x5 tableau.
  * It will count linearly from the top left to the bottom right, 0 to 24. For each position, this
  * class will track the valid positions left, right, above, and below.
+ * It will also track "rigid rows".
  */
 public class CardTableauLayout {
 
@@ -123,6 +124,9 @@ public class CardTableauLayout {
         boolean isValidLinearSelection = true;
         boolean horSelection = false;
         boolean verSelection = false;
+        boolean diagSelection = false;
+        boolean downDiagonalLeft = false;
+        boolean downDiagonalRight = false;
 
         // If at least 2 cards are selected, check if they're valid selections.
         if (atLeast2CardsSelected()) {
@@ -139,7 +143,7 @@ public class CardTableauLayout {
 
                     // If the card to the right is at or before the last card selected and is
                     // selected, increment pos to the position to the right.
-                    if (i + 1 <= lastMost && !verSelection) {
+                    if (i + 1 <= lastMost && !verSelection && !diagSelection) {
                         if (cardsSelected[i + 1]) {
                             pos = i + 1;
                             Log.i(TAG, "clearSelected -- i: " + i + " i+1: " + pos);
@@ -149,7 +153,7 @@ public class CardTableauLayout {
 
                     // If the card below is at or before the last card selected and is selected,
                     // increment pos to the position below.
-                    if (i + 5 <= lastMost && !horSelection) {
+                    if (i + 5 <= lastMost && !horSelection && !diagSelection) {
                         if (cardsSelected[i + 5]) {
                             boolean unselectedBetweenThe5 = true;
                             for (int j = i + 1; j < i + 5; j++) {
@@ -165,6 +169,48 @@ public class CardTableauLayout {
 
                             Log.i(TAG, "clearSelected -- i: " + i + " i+5: " + pos);
                             verSelection = true;
+                        }
+                    }
+
+                    // If the  card is downward diagonal to the left or right of the last selected
+                    // card and is selected, increment pos downward diagonal left or right.
+                    if(!horSelection && !verSelection && firstMost < 20) {
+                        if(i%5 != 4 && cardsSelected[i+6]) {
+                            downDiagonalRight = true;
+                            diagSelection = true;
+                        } else if(i%5 != 0 && cardsSelected[i+4]) {
+                            downDiagonalLeft = true;
+                            diagSelection = true;
+                        } else {
+                            diagSelection = false;
+                        }
+
+                        if(downDiagonalRight) {
+                            boolean unselectedRightDiagonal = true;
+                            for (int j = i + 1; j < i + 6; j++) {
+                                Log.i(TAG, "clearSelected diagonal -- selected[j]: " + cardsSelected[j] + " j: " + j);
+                                if (cardsSelected[j]) {
+                                    unselectedRightDiagonal = false;
+                                    break;
+                                }
+                            }
+                            if (unselectedRightDiagonal) {
+                                pos = i + 6;
+                            }
+                        }
+
+                        if(downDiagonalLeft) {
+                            boolean unselectedLeftDiagonal = true;
+                            for (int j = i + 1; j < i + 4; j++) {
+                                Log.i(TAG, "clearSelected diagonal -- selected[j]: " + cardsSelected[j] + " j: " + j);
+                                if (cardsSelected[j]) {
+                                    unselectedLeftDiagonal = false;
+                                    break;
+                                }
+                            }
+                            if (unselectedLeftDiagonal) {
+                                pos = i + 4;
+                            }
                         }
                     }
 
@@ -191,11 +237,29 @@ public class CardTableauLayout {
                                 break;
                             }
                         }
-                    } else {
+                    } else if(verSelection) {
                         for (int j = firstMost; j < lastMost; j += 5) {
                             if (!cards.isLegalMove(j, j + 5)) {
                                 isValid = false;
                                 break;
+                            }
+                        }
+                    } else {
+
+                        // Diagonal selection.
+                        if(downDiagonalLeft) {
+                            for (int j = firstMost; j < lastMost; j += 4) {
+                                if (!cards.isLegalMove(j, j + 4)) {
+                                    isValid = false;
+                                    break;
+                                }
+                            }
+                        } else {
+                            for (int j = firstMost; j < lastMost; j += 6) {
+                                if (!cards.isLegalMove(j, j + 6)) {
+                                    isValid = false;
+                                    break;
+                                }
                             }
                         }
                     }
@@ -268,6 +332,9 @@ public class CardTableauLayout {
                         outlineP);
             }
         }
+    }
+
+    public void rigidRows() {
     }
 
     // Return width and height coordinates.
